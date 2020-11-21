@@ -1,0 +1,11 @@
+palestrante pode não ter RGM V
+
+email e senha pra todos V
+
+recuperacao de senha
+
+quantidade de participantes -- mudar pra lotação máxima V
+
+data inicio - data fim V
+
+coordenador ver cada review dos participantes V

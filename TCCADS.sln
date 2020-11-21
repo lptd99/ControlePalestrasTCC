@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCCADS", "TCCADS.csproj", "{F71224FE-9FE1-423D-98EF-2721FD2F45D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F71224FE-9FE1-423D-98EF-2721FD2F45D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F71224FE-9FE1-423D-98EF-2721FD2F45D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F71224FE-9FE1-423D-98EF-2721FD2F45D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F71224FE-9FE1-423D-98EF-2721FD2F45D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDC18B94-2131-4B19-A59D-D0B2441E8154}
+	EndGlobalSection
+EndGlobal

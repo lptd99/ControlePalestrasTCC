@@ -1,0 +1,37 @@
+body {
+    background: url("http://teatroumc.com.br/wp-content/uploads/2012/03/teatro2.jpg")
+    no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%/*calc(1920 - 50%)*/;
+    overflow: hidden;
+}
+
+.form-signin {
+    position: relative;
+    text-align: center;
+    background-color: white;
+    width: 100%;
+    max-width: 440px;
+    min-height: 440px;
+    margin: 10%;
+    padding: 40px;
+}
+
+
+
+.form-signin input[type="text"] {
+    position: relative;
+    margin: auto;
+    width: 70%;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.form-signin input[type="password"] {
+    position: relative;
+    margin: auto;
+    width: 70%;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}

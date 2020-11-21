@@ -1,0 +1,9 @@
+coordenador marca presencas dos part V
+
+lista de presenca será impressa -
+
+alguem pegará as presenças da palestra -
+
+gerar arquivo de presença num formato excel -
+
+certificado será por e-mail -

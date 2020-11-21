@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style>
+    </style>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/standard.css">
+    <link rel="stylesheet" href="../css/Login.css">
+</head>
+
+    <body class="text-center">
+        <div id="frmSign" class="form-signin float-right">
+            <form>
+                <img class="text-center" src="http://aluno.umc.br/imagens/logo.svg" width="140px">
+                <h1 class="text-center">UMC Palestras</h1><br />
+                <h2 class="text-center">Portal do coordenador</h2>
+                <label class="sr-only" for="txtEmail">Email</label>
+                <input type="text" class="form-control top" id="txtEmail" placeholder="Email" autofocus>
+                <label class="sr-only" for="txtSenha">Senha</label>
+                <input type="password" class="form-control bot" id="txtSenha" placeholder="Senha">
+                <br />
+            </form>
+            <br />
+            <button id="btnEntrar" class="button" onclick="page()">Entrar</button>
+            <br />
+            <a class="d-block" href="javascript:void(0)" onclick="toggleEsqueci()">Esqueci a senha</a>
+            <a class="float-right" href="Home.apsx">Voltar</a>
+        </div>
+        <div id="frmEsqueci" class="form-signin float-right" style="background-color: #eeeeee; display: none;">
+            <p>Digite seu E-mail e CPF para receber um email de recuperação de senha</p>
+            <label class="sr-only" for="txtEmail">Email</label>
+            <input type="text" class="form-control top" id="txtEmail" placeholder="Email">
+            <label class="sr-only" for="txtCPf">Email</label>
+            <input type="text" class="form-control top" id="txtCPF" placeholder="CPF"><br />
+            <button class="button" onclick="toggleEsqueci()">Enviar</button>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <script src="../js/telaPalestras.js"></script>
+        <script>
+            function page() {
+                var enter = document.getElementsByTagName("input");
+                if(enter[0].value == "coord@umc.br" && enter[1].value == "123"){
+                    window.location.assign("homeCoord.apsx");
+                }
+            }
+        </script>
+
+    </body>
+</html>

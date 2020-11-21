@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <link href="../css/standard.css" rel="stylesheet">
+</head>
+<body>
+    <main>
+
+        <ul class="nav">
+            <li>
+                <a id="ativo" href="#Inicio">Início</a>
+            </li>
+            <li>
+                <a id="controle" href="TelaPalestrasCoord.apsx">Controle de palestras</a>
+            </li>
+            <li>
+                <a id="cadastro" href="javascript:void(0)" onclick="toggleDisplay('frmCadastro')">Cadastrar palestrante</a>
+            </li>
+
+            <li>
+                <a id="sair" href="LoginCoord.apsx">Sair</a>
+            </li>
+        </ul>
+        <div>
+            <h1>Bem vindo(a), <b>Carlos</b></h1>
+        </div>
+        <iframe id="frmCadastro" src="cadastroPalestrante.apsx"></iframe>
+    </main>
+    <script src="../js/telaPalestras.js">
+    </script>
+</body>
+</html>

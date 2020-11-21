@@ -1,0 +1,3 @@
+colocar presenca e avaliacao na inscricao como modelo de dados v
+
+um usuario pra cadastrar coordenadores (admin) -
