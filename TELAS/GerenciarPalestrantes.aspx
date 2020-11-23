@@ -56,6 +56,14 @@
                         <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"></asp:TextBox>
                     </td>
                 </tr>
+                <tr class="auto-style1">
+                    <td>
+                        Telefone
+                    </td>
+                    <td>
+                        <asp:TextBox ID="txtTelefone" runat="server" TextMode="Number"></asp:TextBox>
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         Formação
@@ -71,14 +79,15 @@
             <asp:Button ID="btnLimpar" runat="server" Text="Limpar" OnClick="btnLimpar_Click" />
             <asp:GridView ID="gvPalestrantes" runat="server" AutoGenerateColumns="False" DataKeyNames="id" OnRowCommand="gvPalestrantes_RowCommand">
                 <Columns>
-                    <asp:BoundField DataField="id" HeaderText="id" ReadOnly="True" SortExpression="id" />
-                    <asp:BoundField DataField="nome" HeaderText="nome" SortExpression="nome" />
-                    <asp:BoundField DataField="email" HeaderText="email" SortExpression="email" />
-                    <asp:BoundField DataField="formacao" HeaderText="formacao" SortExpression="formacao" />
+                    <asp:BoundField DataField="id" HeaderText="ID" ReadOnly="True" SortExpression="id" />
+                    <asp:BoundField DataField="nome" HeaderText="Nome" SortExpression="nome" />
+                    <asp:BoundField DataField="email" HeaderText="E-mail" SortExpression="email" />
+                    <asp:BoundField DataField="telefone" HeaderText="Telefone" SortExpression="telefone" />
+                    <asp:BoundField DataField="formacao" HeaderText="Formação" SortExpression="formacao" />
                     <asp:ButtonField ButtonType="Button" CommandName="carregar" Text="Carregar" />
                 </Columns>
             </asp:GridView>
-            <asp:SqlDataSource ID="gvPalestrantesDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:TCCADSConnectionString %>" SelectCommand="SELECT [id], [nome], [email], [formacao] FROM [Palestrante]"></asp:SqlDataSource>
+            <asp:SqlDataSource ID="gvPalestrantesDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:TCCADSConnectionString %>" SelectCommand="SELECT [id], [nome], [email], [telefone], [formacao] FROM [Palestrante]"></asp:SqlDataSource>
             <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click"/>
         </div>
     </form>

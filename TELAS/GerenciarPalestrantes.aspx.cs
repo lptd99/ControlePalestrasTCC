@@ -15,9 +15,89 @@ namespace TCCADS.TELAS
         #endregion
 
         #region Metodos auxiliares
-        private bool cadastroPalestranteValidation()
+        private bool cadastroPalestranteValidateCampos()
         {
-            Boolean valid = false;
+            Boolean valid = true;
+            // VALIDATE NOME
+            if (
+                txtNome.Text == "" || txtNome.Text.Length > 100
+                )
+            {
+                valid = false;
+                alert("O campo Nome não pode ser vazio nem ultrapassar 100 caracteres.");
+            }
+            // VALIDATE RG
+            try
+            {
+                Convert.ToInt64(txtRG.Text);
+            }
+            catch
+            {
+                valid = false;
+                alert("O campo RG deve conter apenas números!");
+            }
+            if (
+                txtRG.Text == "" || txtRG.Text.Length != 9
+                )
+            {
+                valid = false;
+                alert("O campo RG não pode ser vazio e deve ter 9 caracteres.");
+            }
+            // VALIDATE CPF
+            try
+            {
+                Convert.ToInt64(txtCPF.Text);
+            }
+            catch
+            {
+                valid = false;
+                alert("O campo CPF deve conter apenas números!");
+            }
+            if (
+                txtCPF.Text == "" || txtCPF.Text.Length != 11
+                )
+            {
+                valid = false;
+                alert("O campo CPF não pode ser vazio e deve ter 11 caracteres.");
+            }
+            // VALIDATE EMAIL
+            if (
+                txtEmail.Text == "" || txtEmail.Text.Length > 100
+                )
+            {
+                valid = false;
+                alert("O campo E-mail não pode ser vazio nem ultrapassar 100 caracteres.");
+            }
+            // VALIDATE TELEFONE
+            try
+            {
+                Convert.ToInt64(txtTelefone.Text);
+            }
+            catch
+            {
+                valid = false;
+                alert("O campo Telefone deve conter apenas números!");
+            }
+            if (
+                txtTelefone.Text == "" || txtTelefone.Text.Length > 18
+                )
+            {
+                valid = false;
+                alert("O campo Telefone não pode ser vazio nem ultrapassar 18 caracteres.");
+            }
+            // VALIDATE FORMACAO
+            if (
+                txtFormacao.Text == "" || txtFormacao.Text.Length > 100
+                )
+            {
+                valid = false;
+                alert("O campo Formação não pode ser vazio nem ultrapassar 100 caracteres.");
+            }
+            return valid;
+        }
+        private bool cadastroPalestranteFullValidation()
+        {
+            Boolean valid = true;
             int id = -1;
 
             SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
@@ -34,16 +114,18 @@ namespace TCCADS.TELAS
                 }
             }
 
+            // VALIDATE ID
             if (
-                id == -1 &&
-                txtNome.Text != "" &&
-                //txtRG.Text.Length == 9 &&
-                //txtCPF.Text.Length == 11 &&
-                txtEmail.Text != "" &&
-                txtFormacao.Text != ""
+                id != -1
                 )
             {
-                valid = true;
+                valid = false;
+                alert("Este ID já está cadastrado! Tente recarregar a página ou apertar o botão Limpar.");
+            }
+            
+            if(valid)
+            {
+                valid = cadastroPalestranteValidateCampos();
             }
 
             return valid;
@@ -75,6 +157,7 @@ namespace TCCADS.TELAS
             txtRG.Text = "";
             txtCPF.Text = "";
             txtEmail.Text = "";
+            txtTelefone.Text = "";
             txtFormacao.Text = "";
         }
 
@@ -136,12 +219,13 @@ namespace TCCADS.TELAS
 
                 if (newRG && newCPF)
                 {
-                    if (cadastroPalestranteValidation())
+                    if (cadastroPalestranteFullValidation())
                     {
                         SqlCommand sqlCommand = new SqlCommand(
-                            $"insert into palestrante values({txtID.Text}, '{txtNome.Text}','{txtRG.Text}','{txtCPF.Text}','{txtEmail.Text}','{txtFormacao.Text}')",
+                            $"insert into palestrante values('{txtNome.Text}','{txtRG.Text}','{txtCPF.Text}','{txtEmail.Text}','{txtTelefone.Text}','{txtFormacao.Text}')",
                             sqlConnection);
                         sqlCommand.ExecuteNonQuery();
+                        limparCampos();
                     }
                     else
                     {
@@ -154,7 +238,6 @@ namespace TCCADS.TELAS
                 }
                 sqlConnection.Close();
                 atualizarGrid();
-                limparCampos();
             }
             catch (Exception exception)
             {
@@ -170,7 +253,7 @@ namespace TCCADS.TELAS
                 {
                     SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
                     SqlCommand sqlCommand = new SqlCommand(
-                        $"UPDATE palestrante SET nome = '{txtNome.Text}', rg = '{txtRG.Text}', cpf = '{txtCPF.Text}', email = '{txtEmail.Text}', formacao = '{txtFormacao.Text}' WHERE id = {txtID.Text}",
+                        $"UPDATE palestrante SET nome = '{txtNome.Text}', rg = '{txtRG.Text}', cpf = '{txtCPF.Text}', email = '{txtEmail.Text}', telefone = '{txtTelefone.Text}', formacao = '{txtFormacao.Text}' WHERE id = {txtID.Text}",
                         sqlConnection);
                     sqlCommand.ExecuteNonQuery();
                 }
@@ -208,7 +291,7 @@ namespace TCCADS.TELAS
             }
             catch (Exception exception)
             {
-                alert("Falha ao Alterar Palestrante. Erro: " + exception);
+                alert("Falha ao Excluir Palestrante. Erro: " + exception);
             }
         }
 
@@ -235,6 +318,7 @@ namespace TCCADS.TELAS
                         txtRG.Text = Convert.ToString(sqlDataReader["rg"]);
                         txtCPF.Text = Convert.ToString(sqlDataReader["cpf"]);
                         txtEmail.Text = Convert.ToString(sqlDataReader["email"]);
+                        txtTelefone.Text = Convert.ToString(sqlDataReader["telefone"]);
                         txtFormacao.Text = Convert.ToString(sqlDataReader["formacao"]);
                     }
                     sqlDataReader.Close();

@@ -50,7 +50,7 @@
                         Data e Horário Início
                     </td>
                     <td>
-                        <asp:TextBox ID="txtDataHorarioInicio" runat="server" TextMode="DateTime" ToolTip="Exemplo: 2020-12-05 20:30:00"></asp:TextBox>
+                        <asp:TextBox ID="txtDataHorarioInicio" runat="server" TextMode="DateTime" ToolTip="Exemplo: 2020-30-12 20:30:00"></asp:TextBox>
                     </td>
                     <td>
                         Formato: aaaa-dd-MM hh:mm:ss <br /> a = Ano, M = Mês, d = Dia, h = Hora, m = Minuto, s = Segundo
@@ -61,7 +61,7 @@
                         Data e Horário Término
                     </td>
                     <td>
-                        <asp:TextBox ID="txtDataHorarioTermino" runat="server" TextMode="DateTime" ToolTip="Exemplo: 2020-12-05 21:30:00"></asp:TextBox>
+                        <asp:TextBox ID="txtDataHorarioTermino" runat="server" TextMode="DateTime" ToolTip="Exemplo: 2020-30-12 21:30:00"></asp:TextBox>
                     </td>
                     <td>
                         Formato: aaaa-dd-MM hh:mm:ss <br /> a = Ano, M = Mês, d = Dia, h = Hora, m = Minuto, s = Segundo

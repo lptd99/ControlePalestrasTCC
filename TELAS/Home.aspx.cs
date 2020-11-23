@@ -26,6 +26,7 @@ namespace TCCADS.TELAS
 
                 if (contagem == 0)
                 {
+                    Session["CadastrarPrimeiroCoordenador"] = true;
                     Response.Redirect("CadastrarCoordenador.aspx");
                 }
             }

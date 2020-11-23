@@ -16,9 +16,12 @@ namespace TCCADS.TELAS
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["RGM_Usuario"] == null || !Convert.ToBoolean(Session["Coordenador"]))
+            if (!Convert.ToBoolean(Session["CadastrarPrimeiroCoordenador"]))
             {
-                Response.Redirect("Home.aspx");
+                if (Session["RGM_Usuario"] == null || !Convert.ToBoolean(Session["Coordenador"]))
+                {
+                    Response.Redirect("Home.aspx");
+                }
             }
         }
 
@@ -56,6 +59,7 @@ namespace TCCADS.TELAS
 
                         sqlCommand.ExecuteNonQuery();
                         Response.Write("<script>alert('Cadastro efetuado com sucesso!')</script>");
+                        Response.Redirect("Home.aspx");
                     } else
                     {
                         Response.Write("<script>alert('Um ou mais campos estão inválidos!')</script>");

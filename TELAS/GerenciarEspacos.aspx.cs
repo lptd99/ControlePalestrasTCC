@@ -17,7 +17,7 @@ namespace TCCADS.TELAS
         #region Metodos auxiliares
         private bool cadastroEspacoValidation()
         {
-            Boolean valid = false;
+            Boolean valid = true;
             int id = -1;
             SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
             SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, $"select id as id from espaco where id = {txtID.Text}");
@@ -34,12 +34,32 @@ namespace TCCADS.TELAS
             }
 
             if (
-                id == -1 &&
-                txtNome.Text != "" &&
-                Convert.ToInt32(txtCapacidade.Text) >= 0 && Convert.ToInt32(txtCapacidade.Text) <= 500000
+                id != -1
                 )
             {
-                valid = true;
+                valid = false;
+                alert("ID inválido! Tente apertar o botão Limpar ou recarregar a página.");
+            }
+            // VALIDATE Nome
+            if (txtNome.Text == "" || txtNome.Text.Length > 100)
+            {
+                valid = false;
+                alert("O campo Nome não pode ser vazio nem ultrapassar os 100 caracteres!");
+            }
+            // VALIDATE Capacidade
+            try
+            {
+                Convert.ToInt32(txtCapacidade.Text);
+            }
+            catch
+            {
+                valid = false;
+                alert("O campo Capacidade deve conter apenas números!");
+            }
+            if (txtCapacidade.Text == "" || txtCapacidade.Text.Length > 9)
+            {
+                valid = false;
+                alert("O campo Capacidade não pode ser vazio nem ultrapassar 9 caracteres!");
             }
 
             return valid;
@@ -101,7 +121,7 @@ namespace TCCADS.TELAS
                 if (cadastroEspacoValidation())
                 {
                     SqlCommand sqlCommand = new SqlCommand(
-                        $"insert into espaco values({txtID.Text}, '{txtNome.Text}','{txtCapacidade.Text}')",
+                        $"insert into espaco values('{txtNome.Text}', {txtCapacidade.Text})",
                         sqlConnection);
                     sqlCommand.ExecuteNonQuery();
                 }
@@ -127,7 +147,7 @@ namespace TCCADS.TELAS
                 {
                     SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
                     SqlCommand sqlCommand = new SqlCommand(
-                        $"UPDATE espaco SET nome = '{txtNome.Text}', capacidade = '{txtCapacidade.Text}' WHERE id = {txtID.Text}",
+                        $"UPDATE espaco SET nome = '{txtNome.Text}', capacidade = {txtCapacidade.Text} WHERE id = {txtID.Text}",
                         sqlConnection);
                     sqlCommand.ExecuteNonQuery();
                 }

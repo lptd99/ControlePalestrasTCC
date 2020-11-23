@@ -43,7 +43,7 @@ namespace TCCADS.TELAS
             }
             catch (Exception exception)
             {
-                alert("Falha ao Verificar Conflitos de Horário. Erro: " + exception);
+                alert("Falha ao Verificar Conflitos de Horário. Erro: " + exception.ToString());
             }
             #endregion
 
@@ -164,7 +164,7 @@ namespace TCCADS.TELAS
             }
             catch (Exception exception)
             {
-                alert("Falha ao verificar Conflitos de Horário. Erro: " + exception);
+                alert("Falha ao verificar Conflitos de Horário. Erro: " + exception.ToString());
             }
             #endregion
 
@@ -246,14 +246,14 @@ namespace TCCADS.TELAS
                         $"insert into palestra values({ddlPalestrante.SelectedValue}, {ddlCoordenador.SelectedValue}, '{txtNome.Text}', '{txtDataHorarioInicio.Text}', '{txtDataHorarioTermino.Text}', '{txtCurso.Text}', {ddlEspaco.SelectedValue}, NULL, 0)",
                         sqlConnection);
                     sqlCommand.ExecuteNonQuery();
+                limparCampos();
                 }
                 sqlConnection.Close();
                 atualizarGrid();
-                limparCampos();
             }
             catch (Exception exception)
             {
-                alert("Falha ao Adicionar Palestra. Erro: " + exception);
+                alert("Falha ao Adicionar Palestra. Erro: " + exception.ToString());
             }
         }
 
@@ -267,21 +267,21 @@ namespace TCCADS.TELAS
                     {
                         SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
                         SqlCommand sqlCommand = new SqlCommand(
-                            $"UPDATE palestra SET idPalestrante = {ddlPalestrante.SelectedValue}, rgmCoordenador = {ddlCoordenador.SelectedValue}, nome = '{txtNome.Text}', dataHorarioInicio = '{txtDataHorarioInicio.Text}', dataHorarioTermino = '{txtDataHorarioTermino.Text}', curso = '{txtCurso.Text}', idEspaco = {ddlEspaco.SelectedValue}, nota = {txtNota.Text}, inscritos = {txtInscritos.Text} WHERE id = {txtID.Text}",
+                            $"UPDATE palestra SET idPalestrante = {ddlPalestrante.SelectedValue}, rgmCoordenador = {ddlCoordenador.SelectedValue}, nome = '{txtNome.Text}', dataHorarioInicio = '{txtDataHorarioInicio.Text}', dataHorarioTermino = '{txtDataHorarioTermino.Text}', curso = '{txtCurso.Text}', idEspaco = {ddlEspaco.SelectedValue} WHERE id = {txtID.Text}",
                             sqlConnection);
                         sqlCommand.ExecuteNonQuery();
+                        limparCampos();
                     }
                     else
                     {
                         alert("Carregue uma Palestra primeiro!");
                     }
                 }
-                limparCampos();
                 atualizarGrid();
             }
             catch (Exception exception)
             {
-                alert("Falha ao Alterar Palestra. Erro: " + exception);
+                alert("Falha ao Alterar Palestra. Erro: " + exception.ToString());
             }
         }
 
@@ -344,7 +344,7 @@ namespace TCCADS.TELAS
                 }
                 catch (Exception exception)
                 {
-                    alert("Falha ao Carregar Palestra. Erro: " + exception);
+                    alert("Falha ao Carregar Palestra. Erro: " + exception.ToString());
                 }
             }
         }
