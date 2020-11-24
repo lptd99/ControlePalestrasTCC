@@ -30,7 +30,75 @@ namespace TCCADS.TELAS
 
                 if (dr.Read())
                 {
-                    id = Convert.ToInt32(dr["id"]);
+                    try
+                    {
+                        id = Convert.ToInt32(dr["id"]);
+                    }
+                    catch
+                    {
+                        id = -1;
+                    }
+                }
+                else
+                {
+                    id = -1;
+                }
+                dr.Close();
+            }
+
+            if (
+                id == -1
+                )
+            {
+                valid = false;
+                alert("ID inválido! Tente apertar o botão Limpar ou recarregar a página.");
+            }
+            // VALIDATE Nome
+            if (txtNome.Text == "" || txtNome.Text.Length > 100)
+            {
+                valid = false;
+                alert("O campo Nome não pode ser vazio nem ultrapassar os 100 caracteres!");
+            }
+            // VALIDATE Capacidade
+            try
+            {
+                Convert.ToInt32(txtCapacidade.Text);
+            }
+            catch
+            {
+                valid = false;
+                alert("O campo Capacidade deve conter apenas números!");
+            }
+            if (txtCapacidade.Text == "" || txtCapacidade.Text.Length > 9)
+            {
+                valid = false;
+                alert("O campo Capacidade não pode ser vazio nem ultrapassar 9 caracteres!");
+            }
+
+            return valid;
+        }
+        private bool cadastroEspacoValidationINSERT()
+        {
+            Boolean valid = true;
+            int id = -1;
+
+            using (ServicosDB db = new ServicosDB()) // READ DATABASE
+            {
+                string cmd = "select id from espaco where id = @id";
+                SqlDataReader dr = db.ExecQuery(
+                    cmd,
+                    new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text });
+
+                if (dr.Read())
+                {
+                    try
+                    {
+                        id = Convert.ToInt32(dr["id"]);
+                    }
+                    catch
+                    {
+                        id = -1;
+                    }
                 }
                 else
                 {
@@ -79,11 +147,14 @@ namespace TCCADS.TELAS
 
                 if (dr.Read())
                 {
-                    nextID = Convert.ToInt32(dr["lastID"]) + 1;
-                }
-                else
-                {
-                    nextID = 0;
+                    try
+                    {
+                        nextID = Convert.ToInt32(dr["lastID"]) + 1;
+                    }
+                    catch
+                    {
+                        nextID = 0;
+                    }
                 }
                 dr.Close();
             }
@@ -122,9 +193,8 @@ namespace TCCADS.TELAS
 
         protected void btnAdicionar_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (cadastroEspacoValidation())
+            //try {
+                if (cadastroEspacoValidationINSERT())
                 {
                     using (ServicosDB db = new ServicosDB()) // INSERT DATABASE
                     {
@@ -148,29 +218,27 @@ namespace TCCADS.TELAS
                 }
                 atualizarGrid();
                 limparCampos();
-            }
-            catch (Exception exception)
-            {
-                alert("Falha ao Adicionar Espaço. Erro: " + exception);
-            }
+            //} catch (Exception exception) { alert("Falha ao Adicionar Espaço. Erro: " + exception); }
         }
 
         protected void btnAlterar_Click(object sender, EventArgs e)
         {
-            try
-            {
+            //try {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
                     using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
                     {
-                        string cmd = "UPDATE espaco SET nome = @nome, capacidade = @capacidade where id = @id";
-                        if (db.ExecUpdate(
-                            cmd,
-                            new SqlParameter("@nome", SqlDbType.Int) { Value = txtNome.Text },
-                            new SqlParameter("@capacidade", SqlDbType.Int) { Value = txtCapacidade.Text },
-                            new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
-                            ) > 0)
-                        { }
+                        if (cadastroEspacoValidation())
+                        {
+                            string cmd = "UPDATE espaco SET nome = @nome, capacidade = @capacidade where id = @id";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                                new SqlParameter("@capacidade", SqlDbType.Int) { Value = txtCapacidade.Text },
+                                new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
+                                ) > 0)
+                            { }
+                        }
                         else
                         {
                             alert("Falha ao adicionar Espaço!");
@@ -184,17 +252,12 @@ namespace TCCADS.TELAS
                 }
                 limparCampos();
                 atualizarGrid();
-            }
-            catch (Exception exception)
-            {
-                alert("Falha ao Alterar Espaço. Erro: " + exception);
-            }
+            //} catch (Exception exception) { alert("Falha ao Alterar Espaço. Erro: " + exception); }
         }
 
         protected void btnExcluir_Click(object sender, EventArgs e)
         {
-            try
-            {
+            //try {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
                     using (ServicosDB db = new ServicosDB()) // DELETE DATABASE
@@ -205,7 +268,6 @@ namespace TCCADS.TELAS
                             new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
                             ) > 0)
                         {
-                            alert("Espaço excluído com sucesso!");
                             limparCampos();
                         }
                         else
@@ -221,11 +283,7 @@ namespace TCCADS.TELAS
                 }
                 limparCampos();
                 atualizarGrid();
-            }
-            catch (Exception exception)
-            {
-                alert("Falha ao Excluir Espaço. Erro: " + exception.ToString() + ". Talvez este espaço esteja ocupado por alguma palestra?");
-            }
+            //} catch (Exception exception) { alert("Falha ao Excluir Espaço. Erro: " + exception.ToString() + ". Talvez este espaço esteja ocupado por alguma palestra?"); }
         }
 
         protected void btnVoltar_Click(object sender, EventArgs e)
@@ -237,8 +295,7 @@ namespace TCCADS.TELAS
         {
             if (e.CommandName == "carregar")
             {
-                try
-                {
+                //try {
                     int Linha = Convert.ToInt32(e.CommandArgument);
                     int idEspacoAtual = Convert.ToInt32(gvEspacos.Rows[Linha].Cells[0].Text);
 
@@ -258,11 +315,7 @@ namespace TCCADS.TELAS
                         }
                         dr.Close();
                     }
-                }
-                catch (Exception exception)
-                {
-                    alert("Falha ao Carregar Espaço. Erro: " + exception.ToString());
-                }
+                //} catch (Exception exception) { alert("Falha ao Carregar Espaço. Erro: " + exception.ToString()); }
             }
         }
 

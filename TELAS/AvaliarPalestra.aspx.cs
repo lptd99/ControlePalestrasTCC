@@ -39,7 +39,7 @@ namespace TCCADS.TELAS
                     if (db.ExecUpdate(
                         cmd,
                         new SqlParameter("@nota", SqlDbType.Int) { Value = txtNota.Text },
-                        new SqlParameter("@RGM_Usuario", SqlDbType.Int) { Value = Session["RGM_Usuario"] },
+                        new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = Session["RGM_Usuario"] },
                         new SqlParameter("@Avaliando_Palestra_ID", SqlDbType.Int) { Value = Session["Avaliando_Palestra_ID"] }
                         ) > 0)
                     { }

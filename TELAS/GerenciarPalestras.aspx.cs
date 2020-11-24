@@ -138,6 +138,7 @@ namespace TCCADS.TELAS
                 int minutoI = Convert.ToInt32(splitTimeInicio[1]);
                 int segundoI = Convert.ToInt32(splitTimeInicio[2]);
                 DateTime dataHorarioInicio = new DateTime(Convert.ToInt32(splitDateInicio[0]), Convert.ToInt32(splitDateInicio[2]), Convert.ToInt32(splitDateInicio[1]), Convert.ToInt32(splitTimeInicio[0]), Convert.ToInt32(splitTimeInicio[1]), Convert.ToInt32(splitTimeInicio[2]));
+                stringDataHorarioInicio = splitDateInicio[0] + "-" + splitDateInicio[2] + "-" + splitDateInicio[1] + " " + splitTimeInicio[0] + ":" + splitTimeInicio[1] + ":" + splitTimeInicio[2];
 
                 String[] dataHorarioTerminoPair = txtDataHorarioTermino.Text.Split(' ');
                 String[] splitDateTermino = dataHorarioTerminoPair[0].Split('-');
@@ -149,7 +150,7 @@ namespace TCCADS.TELAS
                 int minutoP = Convert.ToInt32(splitTimeTermino[1]);
                 int segundoP = Convert.ToInt32(splitTimeTermino[2]);
                 DateTime dataHorarioTermino = new DateTime(Convert.ToInt32(splitDateTermino[0]), Convert.ToInt32(splitDateTermino[2]), Convert.ToInt32(splitDateTermino[1]), Convert.ToInt32(splitTimeTermino[0]), Convert.ToInt32(splitTimeTermino[1]), Convert.ToInt32(splitTimeTermino[2]));
-
+                stringDataHorarioTermino = splitDateTermino[0] + "-" + splitDateTermino[2] + "-" + splitDateTermino[1] + " " + splitTimeTermino[0] + ":" + splitTimeTermino[1] + ":" + splitTimeTermino[2];
 
                 if (dataHorarioInicio == dataHorarioTermino || dataHorarioInicio > dataHorarioTermino)
                 {
@@ -219,11 +220,14 @@ namespace TCCADS.TELAS
 
                 if (dr.Read())
                 {
-                    nextID = Convert.ToInt32(dr["lastID"]) + 1;
-                }
-                else
-                {
-                    nextID = 0;
+                    try
+                    {
+                        nextID = Convert.ToInt32(dr["lastID"]) + 1;
+                    }
+                    catch
+                    {
+                        nextID = 0;
+                    }
                 }
                 dr.Close();
             }
@@ -232,13 +236,15 @@ namespace TCCADS.TELAS
         public void limparCampos()
         {
             txtID.Text = Convert.ToString(getNextID());
-            ddlPalestrante.SelectedIndex = 0;
-            ddlCoordenador.SelectedIndex = 0;
+            try {
+                ddlPalestrante.SelectedIndex = 0;
+                ddlCoordenador.SelectedIndex = 0;
+                ddlEspaco.SelectedIndex = 0;
+            } catch { }
             txtNome.Text = "";
             txtDataHorarioInicio.Text = "";
             txtDataHorarioTermino.Text = "";
             txtCurso.Text = "";
-            ddlEspaco.SelectedIndex = 0;
             txtNota.Text = "0";
             txtInscritos.Text = "0";
         }
@@ -300,8 +306,7 @@ namespace TCCADS.TELAS
 
         protected void btnAlterar_Click(object sender, EventArgs e)
         {
-            try
-            {
+            //try {
                 if (cadastroPalestraValidationUPDATE())
                 {
                     if (Convert.ToInt32(txtID.Text) < getNextID())
@@ -312,16 +317,15 @@ namespace TCCADS.TELAS
                             if (db.ExecUpdate(
                                 cmd,
                                 new SqlParameter("@idPalestrante", SqlDbType.Int) { Value = ddlPalestrante.SelectedValue },
-                                new SqlParameter("@rgmCoordenador", SqlDbType.Int) { Value = ddlCoordenador.SelectedValue },
+                                new SqlParameter("@rgmCoordenador", SqlDbType.VarChar, 20) { Value = ddlCoordenador.SelectedValue },
                                 new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
-                                new SqlParameter("@dataHorarioInicio", SqlDbType.DateTime) { Value = txtDataHorarioInicio.Text },
-                                new SqlParameter("@dataHorarioTermino", SqlDbType.DateTime) { Value = txtDataHorarioTermino.Text },
+                                new SqlParameter("@dataHorarioInicio", SqlDbType.DateTime) { Value = stringDataHorarioInicio },
+                                new SqlParameter("@dataHorarioTermino", SqlDbType.DateTime) { Value = stringDataHorarioTermino },
                                 new SqlParameter("@curso", SqlDbType.VarChar, 100) { Value = txtCurso.Text },
                                 new SqlParameter("@idEspaco", SqlDbType.Int) { Value = ddlEspaco.SelectedValue },
                                 new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = txtID.Text }
                                 ) > 0)
                             {
-                                alert("Palestra alterada com sucesso!");
                                 limparCampos();
                             }
                             else
@@ -335,12 +339,12 @@ namespace TCCADS.TELAS
                         alert("Carregue uma Palestra primeiro!");
                     }
                 }
+                else
+                {
+                    alert("Um ou mais campos inválidos!");
+                }
                 atualizarGrid();
-            }
-            catch (Exception exception)
-            {
-                alert("Falha ao Alterar Palestra. Erro: " + exception.ToString());
-            }
+            //} catch (Exception exception) { alert("Falha ao Alterar Palestra. Erro: " + exception.ToString()); }
         }
 
         protected void btnExcluir_Click(object sender, EventArgs e)
@@ -357,7 +361,6 @@ namespace TCCADS.TELAS
                             new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = txtID.Text }
                             ) > 0)
                         {
-                            alert("Palestra excluída com sucesso!");
                             limparCampos();
                         }
                         else

@@ -147,11 +147,14 @@ namespace TCCADS.TELAS
 
                 if (dr.Read())
                 {
-                    nextID = Convert.ToInt32(dr["lastID"]) + 1;
-                }
-                else
-                {
-                    nextID = 0;
+                    try
+                    {
+                        nextID = Convert.ToInt32(dr["lastID"]) + 1;
+                    }
+                    catch
+                    {
+                        nextID = 0;
+                    }
                 }
                 dr.Close();
             }
@@ -272,7 +275,7 @@ namespace TCCADS.TELAS
                 }
                 else
                 {
-                    alert("RG ou CPF já cadastrado!");
+                    alert("RG ou CPF já cadastrados ou inválidos!");
                 }
                 atualizarGrid();
             }
@@ -288,32 +291,39 @@ namespace TCCADS.TELAS
             {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
-                    using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                    if (cadastroPalestranteValidateCampos())
                     {
-                        string cmd = "UPDATE palestrante SET nome = @nome, rg = @rg, cpf = @cpf, email = @email, telefone = @telefone, formacao = @formacao where id = @id";
-                        if (db.ExecUpdate(
-                            cmd,
-                            new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
-                            new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text },
-                            new SqlParameter("@cpf", SqlDbType.VarChar, 11) { Value = txtCPF.Text },
-                            new SqlParameter("@email", SqlDbType.VarChar, 100) { Value = txtEmail.Text },
-                            new SqlParameter("@telefone", SqlDbType.VarChar, 20) { Value = txtTelefone.Text },
-                            new SqlParameter("@formacao", SqlDbType.VarChar, 100) { Value = txtFormacao.Text },
-                            new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
-                            ) > 0)
-                        { }
-                        else
+                        using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
                         {
-                            alert("Falha ao adicionar Palestrante!");
+                            string cmd = "UPDATE palestrante SET nome = @nome, rg = @rg, cpf = @cpf, email = @email, telefone = @telefone, formacao = @formacao where id = @id";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                                new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text },
+                                new SqlParameter("@cpf", SqlDbType.VarChar, 11) { Value = txtCPF.Text },
+                                new SqlParameter("@email", SqlDbType.VarChar, 100) { Value = txtEmail.Text },
+                                new SqlParameter("@telefone", SqlDbType.VarChar, 20) { Value = txtTelefone.Text },
+                                new SqlParameter("@formacao", SqlDbType.VarChar, 100) { Value = txtFormacao.Text },
+                                new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
+                                ) > 0)
+                            { 
+                                limparCampos();
+                            }
+                            else
+                            {
+                                alert("Falha ao alterar Palestrante!");
+                            }
                         }
-                        atualizarGrid();
+                    }
+                    else
+                    {
+                        alert("Um ou mais campos inválidos!");
                     }
                 }
                 else
                 {
                     alert("Carregue um Palestrante primeiro!");
                 }
-                limparCampos();
                 atualizarGrid();
             }
             catch (Exception exception)
@@ -336,7 +346,6 @@ namespace TCCADS.TELAS
                             new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
                             ) > 0)
                         {
-                            alert("Palestrante excluído com sucesso!");
                             limparCampos();
                         }
                         else
