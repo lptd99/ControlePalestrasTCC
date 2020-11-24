@@ -138,7 +138,7 @@ namespace TCCADS.TELAS
                                 cmd,
                                 new SqlParameter("@rgm", SqlDbType.VarChar, 20) { Value = txtRGM.Text },
                                 new SqlParameter("@email", SqlDbType.VarChar, 100) { Value = txtEmail.Text },
-                                new SqlParameter("@senha", SqlDbType.VarChar, 30) { Value = pwdSenha.Text },
+                                new SqlParameter("@senha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(pwdSenha.Text) },
                                 new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
                                 new SqlParameter("@dataNasc", SqlDbType.Date) { Value = txtDataNasc.Text },
                                 new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text },

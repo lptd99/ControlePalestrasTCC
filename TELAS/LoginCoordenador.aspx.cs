@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -30,6 +31,7 @@ namespace TCCADS.TELAS
         {
             using (ServicosDB db = new ServicosDB()) // READ DATABASE
             {
+                String password = SHA256.Create(txtSenha.Text).ToString();
                 string cmd = "select rgm, senha from coordenador where rgm = @rgm";
                 SqlDataReader dr = db.ExecQuery(
                     cmd,
@@ -37,7 +39,7 @@ namespace TCCADS.TELAS
                     );
                 if (dr.Read())
                 {
-                    if (Convert.ToString(dr["rgm"]) == txtRGM.Text && Convert.ToString(dr["senha"]) == txtSenha.Text)
+                    if (Convert.ToString(dr["rgm"]) == txtRGM.Text && Convert.ToString(dr["senha"]) == ServicosDB.stringToSHA256(txtSenha.Text))
                     {
                         Session["RGM_Usuario"] = txtRGM.Text;
                         Session["Coordenador"] = true;

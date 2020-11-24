@@ -174,8 +174,11 @@ namespace TCCADS.TELAS
 
         private void atualizarGrid()
         {
-            gvPalestrantes.DataSource = gvPalestrantesDataSource;
-            gvPalestrantes.DataBind();
+            using (ServicosDB db = new ServicosDB())
+            {
+                gvPalestrantes.DataSource = db.ExecQuery($"SELECT [id], [nome], [email], [telefone], [formacao] FROM [Palestrante]");
+                gvPalestrantes.DataBind();
+            }
         }
         public void alert(string Msg)
         {

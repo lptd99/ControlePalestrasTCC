@@ -1,14 +1,32 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace TCCADS
 {
     public class ServicosDB : IDisposable
     {
-        public const string SERVIDOR = @"DESKTOP_PCH001\TCCADS01";
-        public const string BANCO = "TCCADS";
-        public const string USUARIO = "sa";
-        public const string SENHA = "admin00";
+        public const string SERVIDOR = @"";
+        public const string BANCO = "";
+        public const string USUARIO = "";
+        public const string SENHA = "";
+
+        public static String stringToSHA256(string value)
+        {
+            StringBuilder Sb = new StringBuilder();
+
+            using (var hash = SHA256.Create())
+            {
+                Encoding enc = Encoding.UTF8;
+                Byte[] result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (Byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            return Sb.ToString();
+        }
 
         public SqlConnection Conexao { get; private set; }
 

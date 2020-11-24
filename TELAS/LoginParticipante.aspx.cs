@@ -32,7 +32,7 @@ namespace TCCADS.TELAS
                     );
                 if (dr.Read())
                 {
-                    if (Convert.ToString(dr["rgm"]) == txtRGM.Text && Convert.ToString(dr["senha"]) == txtSenha.Text)
+                    if (Convert.ToString(dr["rgm"]) == txtRGM.Text && Convert.ToString(dr["senha"]) == ServicosDB.stringToSHA256(txtSenha.Text))
                     {
                         Session["RGM_Usuario"] = txtRGM.Text;
                         Session["Coordenador"] = false;

@@ -168,8 +168,11 @@ namespace TCCADS.TELAS
         }
         private void atualizarGrid()
         {
-            gvEspacos.DataSource = gvEspacosDataSource;
-            gvEspacos.DataBind();
+            using (ServicosDB db = new ServicosDB())
+            {
+                gvEspacos.DataSource = db.ExecQuery($"SELECT [id], [nome], [capacidade] FROM [Espaco]");
+                gvEspacos.DataBind();
+            }
         }
         public void alert(string Msg)
         {

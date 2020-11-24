@@ -16,81 +16,6 @@ namespace TCCADS.TELAS
             Response.Write($"<script>alert('{Msg}');</script>");
         }
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void btnCadastrarPart_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Boolean newRGM = true;
-
-                using (ServicosDB db = new ServicosDB()) // READ DATABASE
-                {
-                    string cmd = "select count(rgm) as contagem from participante where rgm = @rgm";
-                    SqlDataReader dr = db.ExecQuery(
-                        cmd,
-                        new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = txtRGM.Text }
-                        );
-
-                    if (dr.Read())
-                    {
-                        if (Convert.ToInt32(dr["contagem"]) > 0)
-                        {
-                            newRGM = false;
-                        }
-                        else
-                        { }
-                    }
-                    dr.Close();
-                }
-
-                if (newRGM)
-                {
-                    if (cadastroPartValidation())
-                    {
-
-                        using (ServicosDB db = new ServicosDB()) // INSERT DATABASE
-                        {
-                            string cmd = "insert into participante values(@rgm, @email, @senha, @nome, @dataNasc, @rg, @cpf, @curso)";
-                            if (db.ExecUpdate(
-                                cmd,
-                                new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = txtRGM.Text },
-                                new SqlParameter("@email", SqlDbType.VarChar, 100) { Value = txtEmail.Text },
-                                new SqlParameter("@senha", SqlDbType.VarChar, 30) { Value = pwdSenha.Text },
-                                new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
-                                new SqlParameter("@dataNasc", SqlDbType.Date) { Value = txtDataNasc.Text },
-                                new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text },
-                                new SqlParameter("@cpf", SqlDbType.VarChar, 11) { Value = txtCPF.Text },
-                                new SqlParameter("@curso", SqlDbType.VarChar, 100) { Value = txtCurso.Text }
-                                ) > 0)
-                            {
-                                alert("Cadastro efetuado com sucesso!");
-                            }
-                            else
-                            {
-                                alert("Falha ao cadastrar Participante!");
-                            }
-                        }
-                        Response.Redirect("Home.aspx");
-                    } else
-                    {
-                        alert("Um ou mais campos estão inválidos!");
-                    }
-                }
-                else
-                {
-                    alert("Este RGM já está cadastrado!");
-                }
-            }
-            catch (Exception exception)
-            {
-                alert("Falha ao Cadastrar Participante. Erro: " + exception);
-            }
-        }
-
         private bool cadastroPartValidation()
         {
             Boolean valid = true;
@@ -171,6 +96,80 @@ namespace TCCADS.TELAS
             }
 
             return valid;
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnCadastrarPart_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Boolean newRGM = true;
+
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
+                {
+                    string cmd = "select count(rgm) as contagem from participante where rgm = @rgm";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = txtRGM.Text }
+                        );
+
+                    if (dr.Read())
+                    {
+                        if (Convert.ToInt32(dr["contagem"]) > 0)
+                        {
+                            newRGM = false;
+                        }
+                        else
+                        { }
+                    }
+                    dr.Close();
+                }
+
+                if (newRGM)
+                {
+                    if (cadastroPartValidation())
+                    {
+                        using (ServicosDB db = new ServicosDB()) // INSERT DATABASE
+                        {
+                            string cmd = "insert into participante values(@rgm, @email, @senha, @nome, @dataNasc, @rg, @cpf, @curso)";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = txtRGM.Text },
+                                new SqlParameter("@email", SqlDbType.VarChar, 100) { Value = txtEmail.Text },
+                                new SqlParameter("@senha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(pwdSenha.Text) },
+                                new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                                new SqlParameter("@dataNasc", SqlDbType.Date) { Value = txtDataNasc.Text },
+                                new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text },
+                                new SqlParameter("@cpf", SqlDbType.VarChar, 11) { Value = txtCPF.Text },
+                                new SqlParameter("@curso", SqlDbType.VarChar, 100) { Value = txtCurso.Text }
+                                ) > 0)
+                            {
+                                alert("Cadastro efetuado com sucesso!");
+                            }
+                            else
+                            {
+                                alert("Falha ao cadastrar Participante!");
+                            }
+                        }
+                        Response.Redirect("Home.aspx");
+                    } else
+                    {
+                        alert("Um ou mais campos estão inválidos!");
+                    }
+                }
+                else
+                {
+                    alert("Este RGM já está cadastrado!");
+                }
+            }
+            catch (Exception exception)
+            {
+                alert("Falha ao Cadastrar Participante. Erro: " + exception);
+            }
         }
 
         protected void btnVoltar_Click(object sender, EventArgs e)

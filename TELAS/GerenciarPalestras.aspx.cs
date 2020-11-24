@@ -250,8 +250,11 @@ namespace TCCADS.TELAS
         }
         private void atualizarGrid()
         {
-            gvPalestras.DataSource = gvPalestrasDataSource;
-            gvPalestras.DataBind();
+            using (ServicosDB db = new ServicosDB())
+            {
+                gvPalestras.DataSource = db.ExecQuery($"SELECT [P].[id] as 'ID', [P].[nome] as 'Nome', [P].[dataHorarioInicio] as 'Data e Horário de Início', [P].[dataHorarioTermino] as 'Data e Horário de Término', [E].[nome] as 'Local', [P].[curso] as 'Curso', [PL].[nome] as 'Palestrante', CONCAT(CONCAT([P].[inscritos], '/'), [E].[capacidade]) as 'Inscritos' FROM [Palestra] as P INNER JOIN [Espaco] as E ON E.id = P.idEspaco INNER JOIN [Palestrante] as PL ON PL.id = P.idPalestrante");
+                gvPalestras.DataBind();
+            }
         }
         public void alert(string Msg)
         {
@@ -261,6 +264,18 @@ namespace TCCADS.TELAS
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            using (ServicosDB db = new ServicosDB())
+            {
+                ddlCoordenador.DataSource = db.ExecQuery($"SELECT [rgm], [nome] FROM [Coordenador]");
+                ddlCoordenador.DataBind();
+
+                ddlPalestrante.DataSource = db.ExecQuery($"SELECT [id], [nome] FROM [Palestrante]");
+                ddlPalestrante.DataBind();
+
+                ddlEspaco.DataSource = db.ExecQuery($"SELECT [id], [nome], [capacidade] FROM [Espaco]");
+                ddlEspaco.DataBind();
+            }
+
             if (Session["RGM_Usuario"] == null || !Convert.ToBoolean(Session["Coordenador"]))
             {
                 Response.Redirect("Home.aspx");
