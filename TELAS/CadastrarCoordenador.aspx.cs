@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -14,69 +15,6 @@ namespace TCCADS.TELAS
         {
             Response.Write($"<script>alert('{Msg}');</script>");
         }
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!Convert.ToBoolean(Session["CadastrarPrimeiroCoordenador"]))
-            {
-                if (Session["RGM_Usuario"] == null || !Convert.ToBoolean(Session["Coordenador"]))
-                {
-                    Response.Redirect("Home.aspx");
-                }
-            }
-        }
-
-        protected void btnCadastrarCoord_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Boolean newRGM = true;
-
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, "select rgm from participante");
-                while (sqlDataReader.Read())
-                {
-                    string rgm = "";
-                    try
-                    {
-                        rgm = Convert.ToString(sqlDataReader["rgm"]);
-                    }
-                    catch (Exception ignored)
-                    { }
-                    if (rgm == txtRGM.Text)
-                    {
-                        newRGM = false;
-                    }
-                }
-                sqlDataReader.Close();
-
-                if (newRGM)
-                {
-                    if (cadastroCoordValidation())
-                    {
-                        SqlCommand sqlCommand = new SqlCommand(
-                            $"insert into coordenador values('{txtRGM.Text}','{txtEmail.Text}','{pwdSenha.Text}','{txtNome.Text}','{txtDataNasc.Text}','{txtRG.Text}','{txtCPF.Text}')",
-                            sqlConnection);
-
-                        sqlCommand.ExecuteNonQuery();
-                        Response.Write("<script>alert('Cadastro efetuado com sucesso!')</script>");
-                        Response.Redirect("Home.aspx");
-                    } else
-                    {
-                        Response.Write("<script>alert('Um ou mais campos estão inválidos!')</script>");
-                    }
-                }
-                else
-                {
-                    Response.Write("<script>alert('Este RGM já está cadastrado!')</script>");
-                }
-                sqlConnection.Close();
-            }
-            catch (Exception exception)
-            {
-                alert("Falha ao Cadastrar Coordenador. Erro: "+exception);
-            }
-        }
-
         private bool cadastroCoordValidation()
         {
             Boolean valid = true;
@@ -150,6 +88,85 @@ namespace TCCADS.TELAS
             }
 
             return valid;
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Convert.ToBoolean(Session["CadastrarPrimeiroCoordenador"]))
+            {
+                if (Session["RGM_Usuario"] == null || !Convert.ToBoolean(Session["Coordenador"]))
+                {
+                    Response.Redirect("Home.aspx");
+                }
+            }
+        }
+
+        protected void btnCadastrarCoord_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Boolean newRGM = true;
+
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
+                {
+                    string cmd = "select count(rgm) as contagem from coordenador where rgm = @rgm";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@rgm", SqlDbType.VarChar, 20) { Value = txtRGM.Text }
+                        );
+
+                    if (dr.Read())
+                    {
+                        if (Convert.ToInt32(dr["contagem"]) > 0)
+                        {
+                            newRGM = false;
+                        }
+                        else
+                        { }
+                    }
+                    dr.Close();
+                }
+
+                if (newRGM)
+                {
+                    if (cadastroCoordValidation())
+                    {
+                        using (ServicosDB db = new ServicosDB()) // INSERT DATABASE
+                        {
+                            string cmd = "insert into coordenador values(@rgm, @email, @senha, @nome, @dataNasc, @rg, @cpf)";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@rgm", SqlDbType.VarChar, 20) { Value = txtRGM.Text },
+                                new SqlParameter("@email", SqlDbType.VarChar, 100) { Value = txtEmail.Text },
+                                new SqlParameter("@senha", SqlDbType.VarChar, 30) { Value = pwdSenha.Text },
+                                new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                                new SqlParameter("@dataNasc", SqlDbType.Date) { Value = txtDataNasc.Text },
+                                new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text },
+                                new SqlParameter("@cpf", SqlDbType.VarChar, 11) { Value = txtCPF.Text }
+                                ) > 0)
+                            {
+                                alert("Cadastro efetuado com sucesso!");
+                            }
+                            else
+                            {
+                                alert("Falha ao cadastrar Coordenador!");
+                            }
+                        }
+                        Response.Redirect("Home.aspx");
+                    } else
+                    {
+                        alert("Um ou mais campos estão inválidos!");
+                    }
+                }
+                else
+                {
+                    alert("Este RGM já está cadastrado!");
+                }
+            }
+            catch (Exception exception)
+            {
+                alert("Falha ao Cadastrar Coordenador. Erro: "+exception.ToString());
+            }
         }
 
         protected void btnVoltar_Click(object sender, EventArgs e)

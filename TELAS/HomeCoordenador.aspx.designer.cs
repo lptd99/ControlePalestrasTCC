@@ -33,24 +33,6 @@ namespace TCCADS.TELAS
         protected global::System.Web.UI.WebControls.Button btnSair;
 
         /// <summary>
-        /// Controle btnPalestras.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPalestras;
-
-        /// <summary>
-        /// Controle btnMinhasPalestras.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnMinhasPalestras;
-
-        /// <summary>
         /// Controle btnGerenciarPalestras.
         /// </summary>
         /// <remarks>

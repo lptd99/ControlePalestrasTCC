@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -32,20 +33,30 @@ namespace TCCADS.TELAS
         {
             if (notaIsValid())
             {
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                SqlCommand sqlCommand = new SqlCommand(
-                    $"UPDATE inscricao SET nota = {txtNota.Text} WHERE rgmParticipante = '{Session["RGM_Usuario"]}' and idPalestra = {Session["Avaliando_Palestra_ID"]}",
-                    sqlConnection);
-                sqlCommand.ExecuteNonQuery();
+                using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                {
+                    string cmd = "UPDATE inscricao SET nota = @nota WHERE rgmParticipante = @RGM_Usuario and idPalestra = @Avaliando_Palestra_ID";
+                    if (db.ExecUpdate(
+                        cmd,
+                        new SqlParameter("@nota", SqlDbType.Int) { Value = txtNota.Text },
+                        new SqlParameter("@RGM_Usuario", SqlDbType.Int) { Value = Session["RGM_Usuario"] },
+                        new SqlParameter("@Avaliando_Palestra_ID", SqlDbType.Int) { Value = Session["Avaliando_Palestra_ID"] }
+                        ) > 0)
+                    { }
+                    else
+                    {
+                        alert("Falha ao adicionar Palestrante!");
+                    }
+                }
                 Response.Redirect("MinhasPalestras.aspx");
             }
             else
-            {
-            }
+            { }
         }
 
         private bool notaIsValid()
         {
+
             int nota = -1;
             try
             {

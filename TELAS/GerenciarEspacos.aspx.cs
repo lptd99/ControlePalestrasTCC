@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -19,18 +20,23 @@ namespace TCCADS.TELAS
         {
             Boolean valid = true;
             int id = -1;
-            SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-            SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, $"select id as id from espaco where id = {txtID.Text}");
-            while (sqlDataReader.Read())
+
+            using (ServicosDB db = new ServicosDB()) // READ DATABASE
             {
-                try
+                string cmd = "select id from espaco where id = @id";
+                SqlDataReader dr = db.ExecQuery(
+                    cmd,
+                    new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text });
+
+                if (dr.Read())
                 {
-                    id = Convert.ToInt32(sqlDataReader["id"]);
+                    id = Convert.ToInt32(dr["id"]);
                 }
-                catch (Exception ignored)
+                else
                 {
                     id = -1;
                 }
+                dr.Close();
             }
 
             if (
@@ -66,20 +72,21 @@ namespace TCCADS.TELAS
         }
         public int getNextID()
         {
-            SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-            SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, "select max(id) as lastID from espaco");
-            while (sqlDataReader.Read())
+            using (ServicosDB db = new ServicosDB()) // READ DATABASE
             {
-                try
+                string cmd = "select max(id) as lastID from espaco";
+                SqlDataReader dr = db.ExecQuery(cmd);
+
+                if (dr.Read())
                 {
-                    nextID = Convert.ToInt32(sqlDataReader["lastID"]) + 1;
+                    nextID = Convert.ToInt32(dr["lastID"]) + 1;
                 }
-                catch (Exception ignored)
+                else
                 {
                     nextID = 0;
                 }
+                dr.Close();
             }
-            sqlDataReader.Close();
             return nextID;
         }
         public void limparCampos()
@@ -117,19 +124,28 @@ namespace TCCADS.TELAS
         {
             try
             {
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
                 if (cadastroEspacoValidation())
                 {
-                    SqlCommand sqlCommand = new SqlCommand(
-                        $"insert into espaco values('{txtNome.Text}', {txtCapacidade.Text})",
-                        sqlConnection);
-                    sqlCommand.ExecuteNonQuery();
+                    using (ServicosDB db = new ServicosDB()) // INSERT DATABASE
+                    {
+                        string cmd = "insert into espaco values(@nome, @capacidade)";
+                        if (db.ExecUpdate(
+                            cmd,
+                            new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                            new SqlParameter("@capacidade", SqlDbType.Int) { Value = txtCapacidade.Text }
+                            ) > 0)
+                        { }
+                        else
+                        {
+                            alert("Falha ao adicionar Palestrante!");
+                        }
+                        atualizarGrid();
+                    }
                 }
                 else
                 {
                     alert("Um ou mais campos estão inválidos!");
                 }
-                sqlConnection.Close();
                 atualizarGrid();
                 limparCampos();
             }
@@ -145,11 +161,22 @@ namespace TCCADS.TELAS
             {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
-                    SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                    SqlCommand sqlCommand = new SqlCommand(
-                        $"UPDATE espaco SET nome = '{txtNome.Text}', capacidade = {txtCapacidade.Text} WHERE id = {txtID.Text}",
-                        sqlConnection);
-                    sqlCommand.ExecuteNonQuery();
+                    using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                    {
+                        string cmd = "UPDATE espaco SET nome = @nome, capacidade = @capacidade where id = @id";
+                        if (db.ExecUpdate(
+                            cmd,
+                            new SqlParameter("@nome", SqlDbType.Int) { Value = txtNome.Text },
+                            new SqlParameter("@capacidade", SqlDbType.Int) { Value = txtCapacidade.Text },
+                            new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
+                            ) > 0)
+                        { }
+                        else
+                        {
+                            alert("Falha ao adicionar Espaço!");
+                        }
+                        atualizarGrid();
+                    }
                 }
                 else
                 {
@@ -170,11 +197,23 @@ namespace TCCADS.TELAS
             {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
-                    SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                    SqlCommand sqlCommand = new SqlCommand(
-                        $"DELETE FROM espaco WHERE id = {txtID.Text}",
-                        sqlConnection);
-                    sqlCommand.ExecuteNonQuery();
+                    using (ServicosDB db = new ServicosDB()) // DELETE DATABASE
+                    {
+                        string cmd = "delete from espaco where id = @id";
+                        if (db.ExecUpdate(
+                            cmd,
+                            new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
+                            ) > 0)
+                        {
+                            alert("Espaço excluído com sucesso!");
+                            limparCampos();
+                        }
+                        else
+                        {
+                            alert("Falha ao excluir Espaço!");
+                        }
+                        atualizarGrid();
+                    }
                 }
                 else
                 {
@@ -185,7 +224,7 @@ namespace TCCADS.TELAS
             }
             catch (Exception exception)
             {
-                alert("Falha ao Excluir Espaço. Erro: " + exception + ". Talvez este espaço esteja ocupado por alguma palestra?");
+                alert("Falha ao Excluir Espaço. Erro: " + exception.ToString() + ". Talvez este espaço esteja ocupado por alguma palestra?");
             }
         }
 
@@ -203,20 +242,26 @@ namespace TCCADS.TELAS
                     int Linha = Convert.ToInt32(e.CommandArgument);
                     int idEspacoAtual = Convert.ToInt32(gvEspacos.Rows[Linha].Cells[0].Text);
 
-                    SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                    SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, $"select * from espaco where id = {idEspacoAtual}");
-                    while (sqlDataReader.Read())
+                    using (ServicosDB db = new ServicosDB()) // READ DATABASE
                     {
-                        txtID.Text = Convert.ToString(sqlDataReader["id"]);
-                        txtNome.Text = Convert.ToString(sqlDataReader["nome"]);
-                        txtCapacidade.Text = Convert.ToString(sqlDataReader["capacidade"]);
+                        string cmd = "select * from espaco where id = @id";
+                        SqlDataReader dr = db.ExecQuery(
+                            cmd,
+                            new SqlParameter("@id", SqlDbType.Int) { Value = idEspacoAtual }
+                            );
+
+                        if (dr.Read())
+                        {
+                            txtID.Text = Convert.ToString(dr["id"]);
+                            txtNome.Text = Convert.ToString(dr["nome"]);
+                            txtCapacidade.Text = Convert.ToString(dr["capacidade"]);
+                        }
+                        dr.Close();
                     }
-                    sqlDataReader.Close();
-                    sqlConnection.Close();
                 }
                 catch (Exception exception)
                 {
-                    alert("Falha ao Carregar Espaço. Erro: " + exception);
+                    alert("Falha ao Carregar Espaço. Erro: " + exception.ToString());
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -12,8 +13,11 @@ namespace TCCADS.TELAS
     {
         private void atualizarGrid()
         {
-            gvMinhasPalestras.DataSource = gvMinhasPalestrasDataSource;
-            gvMinhasPalestras.DataBind();
+            using (ServicosDB db = new ServicosDB())
+            {
+                gvMinhasPalestras.DataSource = db.ExecQuery($"SELECT [P].[id] as 'ID', [P].[nome] as 'Nome', [P].[dataHorarioInicio] as 'Data e Horário de Início', [P].[dataHorarioTermino] as 'Data e Horário de Término', [E].[nome] as 'Sala', [P].[curso] as 'Curso', [PL].[nome] as 'Palestrante', CONCAT(CONCAT([P].[inscritos], '/'), [E].[capacidade]) as 'Inscritos' FROM [Palestra] as P INNER JOIN [Espaco] as E ON E.id = P.idEspaco INNER JOIN [Palestrante] as PL ON PL.id = P.idPalestrante INNER JOIN [Inscricao] as I on P.id = I.idPalestra where I.rgmParticipante = '{Session["RGM_Usuario"]}'");
+                gvMinhasPalestras.DataBind();
+            }
         }
         public void alert(string Msg)
         {
@@ -21,7 +25,6 @@ namespace TCCADS.TELAS
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            gvMinhasPalestrasDataSource.SelectCommand = $"SELECT[P].[id] as 'ID', [P].[nome] as 'Nome', [P].[dataHorarioInicio] as 'Data e Horário de Início', [P].[dataHorarioTermino] as 'Data e Horário de Término', [E].[nome] as 'Sala', [P].[curso] as 'Curso', [PL].[nome] as 'Palestrante', CONCAT(CONCAT([P].[inscritos], '/'), [E].[capacidade]) as 'Inscritos' FROM [Palestra] as P INNER JOIN [Espaco] as E ON E.id = P.idEspaco INNER JOIN [Palestrante] as PL ON PL.id = P.idPalestrante INNER JOIN [Inscricao] as I on P.id = I.idPalestra where I.rgmParticipante = '{Session["RGM_Usuario"]}'";
             atualizarGrid();
             if (Session["RGM_Usuario"] == null)
             {
@@ -43,15 +46,19 @@ namespace TCCADS.TELAS
                 int idPalestraAtual = Convert.ToInt32(gvMinhasPalestras.Rows[Linha].Cells[0].Text);
                 string nomePalestraAtual = Convert.ToString(gvMinhasPalestras.Rows[Linha].Cells[1].Text);
 
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, $"select presente, nota from inscricao where rgmParticipante = {Session["RGM_Usuario"]} and idPalestra = {idPalestraAtual}");
-                while (sqlDataReader.Read())
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
                 {
-                    try
+                    string cmd = "select presente, nota from inscricao where rgmParticipante = @RGM_Usuario and idPalestra = @idPalestraAtual";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = Session["RGM_Usuario"] },
+                        new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual });
+
+                    if (dr.Read())
                     {
-                        if (Convert.ToBoolean(sqlDataReader["presente"]))
+                        if (Convert.ToBoolean(dr["presente"]))
                         {
-                            if (Convert.ToInt32(sqlDataReader["nota"]) == -1)
+                            if (Convert.ToInt32(dr["nota"]) == -1)
                             {
                                 Session["Avaliando_Palestra_ID"] = idPalestraAtual;
                                 Session["Avaliando_Palestra_Nome"] = nomePalestraAtual;
@@ -59,7 +66,7 @@ namespace TCCADS.TELAS
                             }
                             else
                             {
-                                alert("Você já avaliou esta palestra!");
+                                alert("Você já avaliou esta Palestra!");
                             }
                         }
                         else
@@ -67,13 +74,12 @@ namespace TCCADS.TELAS
                             alert("Você não compareceu a esta Palestra!");
                         }
                     }
-                    catch (Exception ignored)
+                    else
                     {
                         alert("Você não compareceu a esta Palestra!");
                     }
+                    dr.Close();
                 }
-                sqlDataReader.Close();
-                sqlConnection.Close();
             }
             else if (e.CommandName == "emitirCertificado")
             {

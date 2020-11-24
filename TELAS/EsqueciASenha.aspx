@@ -14,14 +14,17 @@
             <table>
                 <tr>
                     <td>
-                        Email
+                        RGM
                     </td>
                     <td>
-                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"></asp:TextBox>
+                        <asp:TextBox ID="txtRGM" runat="server" TextMode="Number"></asp:TextBox>
+                    </td>
+                    <td>
+                        <asp:Button ID="btnEnviar" runat="server" Text="Enviar" OnClick="btnEnviar_Click" />
                     </td>
                 </tr>
             </table>
-                <asp:Button ID="btnEnviar" runat="server" Text="Enviar" OnClick="btnEnviar_Click" />
+            <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click" />
         </div>
     </form>
 </body>

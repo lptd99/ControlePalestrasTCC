@@ -12,25 +12,23 @@ namespace TCCADS.TELAS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            int contagem = 0;
-            SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-            SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, "select count(rgm) as contagem from coordenador");
-            while (sqlDataReader.Read())
+            using (ServicosDB db = new ServicosDB()) // READ DATABASE
             {
-                try
-                {
-                    contagem = Convert.ToInt32(sqlDataReader["contagem"]);
-                }
-                catch (Exception ignored)
-                { }
+                string cmd = "select count(rgm) as contagem from coordenador";
+                SqlDataReader dr = db.ExecQuery(
+                    cmd
+                    );
 
-                if (contagem == 0)
+                if (dr.Read())
                 {
-                    Session["CadastrarPrimeiroCoordenador"] = true;
-                    Response.Redirect("CadastrarCoordenador.aspx");
+                    if (Convert.ToInt32(dr["contagem"]) == 0)
+                    {
+                        Session["CadastrarPrimeiroCoordenador"] = true;
+                        Response.Redirect("CadastrarCoordenador.aspx");
+                    }
                 }
+                dr.Close();
             }
-            sqlDataReader.Close();
 
             if(Session["RGM_Usuario"] != null)
             {

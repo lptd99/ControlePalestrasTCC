@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,11 @@ namespace TCCADS.TELAS
 {
     public partial class LoginCoordenador : System.Web.UI.Page
     {
+        public void alert(string Msg)
+        {
+            Response.Write($"<script>alert('{Msg}');</script>");
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -22,43 +28,31 @@ namespace TCCADS.TELAS
 
         protected void btnEntrar_Click(object sender, EventArgs e)
         {
-
-            Boolean existingRGM = false;
-
-            SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-
-            SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, "select rgm from coordenador");
-
-            while (sqlDataReader.Read())
+            using (ServicosDB db = new ServicosDB()) // READ DATABASE
             {
-                string rgm = "";
-                try
+                string cmd = "select rgm, senha from coordenador where rgm = @rgm";
+                SqlDataReader dr = db.ExecQuery(
+                    cmd,
+                    new SqlParameter("@rgm", SqlDbType.VarChar, 20) { Value = txtRGM.Text }
+                    );
+                if (dr.Read())
                 {
-                    rgm = Convert.ToString(sqlDataReader["rgm"]);
+                    if (Convert.ToString(dr["rgm"]) == txtRGM.Text && Convert.ToString(dr["senha"]) == txtSenha.Text)
+                    {
+                        Session["RGM_Usuario"] = txtRGM.Text;
+                        Session["Coordenador"] = true;
+                        Response.Redirect("HomeCoordenador.aspx");
+                    }
+                    else
+                    {
+                        alert("RGM não cadastrado ou Senha incorreta!");
+                    }
                 }
-                catch (Exception ignored)
-                { }
-                if (rgm == txtRGM.Text)
+                else
                 {
-                    existingRGM = true;
+                    alert("RGM não cadastrado ou Senha incorreta!");
                 }
-            }
-            sqlDataReader.Close();
-
-            if (existingRGM)
-            {
-                SqlDataReader sqlDataReader1 = ServicosDB.createSQLCommandReader(sqlConnection, $"select senha from coordenador where rgm = '{txtRGM.Text}'");
-                sqlDataReader1.Read();
-                if (txtSenha.Text == Convert.ToString(sqlDataReader1["senha"]))
-                {
-                    Session["RGM_Usuario"] = txtRGM.Text;
-                    Session["Coordenador"] = true;
-                    Response.Redirect("HomeCoordenador.aspx");
-                }
-            }
-            else
-            {
-                Response.Write("<script>alert('Este RGM nunca foi cadastrado!')</script>");
+                dr.Close();
             }
         }
 

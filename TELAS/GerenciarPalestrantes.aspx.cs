@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -100,18 +101,22 @@ namespace TCCADS.TELAS
             Boolean valid = true;
             int id = -1;
 
-            SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-            SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, $"select id as id from palestrante where id = {txtID.Text}");
-            while (sqlDataReader.Read())
+            using (ServicosDB db = new ServicosDB()) // READ DATABASE
             {
-                try
+                string cmd = "select id from palestrante where id = @id";
+                SqlDataReader dr = db.ExecQuery(
+                    cmd,
+                    new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text });
+
+                if (dr.Read())
                 {
-                    id = Convert.ToInt32(sqlDataReader["id"]);
+                    id = Convert.ToInt32(dr["id"]);
                 }
-                catch (Exception ignored)
+                else
                 {
                     id = -1;
                 }
+                dr.Close();
             }
 
             // VALIDATE ID
@@ -133,20 +138,23 @@ namespace TCCADS.TELAS
 
         public int getNextID()
         {
-            SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-            SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, "select max(id) as lastID from palestrante");
-            while (sqlDataReader.Read())
+            using (ServicosDB db = new ServicosDB()) // READ DATABASE
             {
-                try
+                string cmd = "select max(id) as lastID from palestrante";
+                SqlDataReader dr = db.ExecQuery(
+                    cmd
+                    );
+
+                if (dr.Read())
                 {
-                    nextID = Convert.ToInt32(sqlDataReader["lastID"]) + 1;
+                    nextID = Convert.ToInt32(dr["lastID"]) + 1;
                 }
-                catch (Exception ignored)
+                else
                 {
                     nextID = 0;
                 }
+                dr.Close();
             }
-            sqlDataReader.Close();
             return nextID;
         }
 
@@ -192,40 +200,70 @@ namespace TCCADS.TELAS
             {
                 Boolean newRG = true;
                 Boolean newCPF = true;
-
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, "select rg, cpf from palestrante");
-                while (sqlDataReader.Read())
+                string rg = "";
+                string cpf = "";
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
                 {
-                    string rg = "";
-                    string cpf = "";
-                    try
+                    string cmd = "select rg from palestrante where rg = @rg";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text });
+
+                    if (dr.Read())
                     {
-                        rg = Convert.ToString(sqlDataReader["rg"]);
-                        cpf = Convert.ToString(sqlDataReader["cpf"]);
+                        rg = Convert.ToString(dr["rg"]);
                     }
-                    catch (Exception ignored)
-                    { }
-                    if (rg == txtRG.Text)
-                    {
-                        newRG = false;
-                    }
-                    if (cpf == txtCPF.Text)
-                    {
-                        newCPF = false;
-                    }
+                    dr.Close();
                 }
-                sqlDataReader.Close();
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
+                {
+                    string cmd = "select cpf from palestrante where cpf = @cpf";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@cpf", SqlDbType.VarChar, 11) { Value = txtCPF.Text });
+
+                    if (dr.Read())
+                    {
+                        cpf = Convert.ToString(dr["cpf"]);
+                    }
+                    dr.Close();
+                }
+                if (rg == txtRG.Text)
+                {
+                    newRG = false;
+                }
+                if (cpf == txtCPF.Text)
+                {
+                    newCPF = false;
+                }
 
                 if (newRG && newCPF)
                 {
                     if (cadastroPalestranteFullValidation())
                     {
-                        SqlCommand sqlCommand = new SqlCommand(
-                            $"insert into palestrante values('{txtNome.Text}','{txtRG.Text}','{txtCPF.Text}','{txtEmail.Text}','{txtTelefone.Text}','{txtFormacao.Text}')",
-                            sqlConnection);
-                        sqlCommand.ExecuteNonQuery();
-                        limparCampos();
+                        using (ServicosDB db = new ServicosDB())
+                        {
+                            string cmd = "insert into palestrante values(@nome, @rg, @cpf, @email, @telefone, @formacao)";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                                new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text },
+                                new SqlParameter("@cpf", SqlDbType.VarChar, 11) { Value = txtCPF.Text },
+                                new SqlParameter("@email", SqlDbType.VarChar, 100) { Value = txtEmail.Text },
+                                new SqlParameter("@telefone", SqlDbType.VarChar, 20) { Value = txtTelefone.Text },
+                                new SqlParameter("@formacao", SqlDbType.VarChar, 100) { Value = txtFormacao.Text }
+                                ) > 0)
+                            {
+                                int id = Convert.ToInt32(db.QueryValue("select @@identity"));
+                                txtID.Text = $"{id}";
+                                limparCampos();
+                            }
+                            else
+                            {
+                                alert("Falha ao adicionar Palestrante!");
+                            }
+                            atualizarGrid();
+                        }
                     }
                     else
                     {
@@ -236,7 +274,6 @@ namespace TCCADS.TELAS
                 {
                     alert("RG ou CPF já cadastrado!");
                 }
-                sqlConnection.Close();
                 atualizarGrid();
             }
             catch (Exception exception)
@@ -251,11 +288,26 @@ namespace TCCADS.TELAS
             {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
-                    SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                    SqlCommand sqlCommand = new SqlCommand(
-                        $"UPDATE palestrante SET nome = '{txtNome.Text}', rg = '{txtRG.Text}', cpf = '{txtCPF.Text}', email = '{txtEmail.Text}', telefone = '{txtTelefone.Text}', formacao = '{txtFormacao.Text}' WHERE id = {txtID.Text}",
-                        sqlConnection);
-                    sqlCommand.ExecuteNonQuery();
+                    using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                    {
+                        string cmd = "UPDATE palestrante SET nome = @nome, rg = @rg, cpf = @cpf, email = @email, telefone = @telefone, formacao = @formacao where id = @id";
+                        if (db.ExecUpdate(
+                            cmd,
+                            new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                            new SqlParameter("@rg", SqlDbType.VarChar, 9) { Value = txtRG.Text },
+                            new SqlParameter("@cpf", SqlDbType.VarChar, 11) { Value = txtCPF.Text },
+                            new SqlParameter("@email", SqlDbType.VarChar, 100) { Value = txtEmail.Text },
+                            new SqlParameter("@telefone", SqlDbType.VarChar, 20) { Value = txtTelefone.Text },
+                            new SqlParameter("@formacao", SqlDbType.VarChar, 100) { Value = txtFormacao.Text },
+                            new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
+                            ) > 0)
+                        { }
+                        else
+                        {
+                            alert("Falha ao adicionar Palestrante!");
+                        }
+                        atualizarGrid();
+                    }
                 }
                 else
                 {
@@ -276,11 +328,23 @@ namespace TCCADS.TELAS
             {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
-                    SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                    SqlCommand sqlCommand = new SqlCommand(
-                        $"DELETE FROM palestrante WHERE id = {txtID.Text}",
-                        sqlConnection);
-                    sqlCommand.ExecuteNonQuery();
+                    using (ServicosDB db = new ServicosDB()) // DELETE DATABASE
+                    {
+                        string cmd = "delete from palestrante where id = @id";
+                        if (db.ExecUpdate(
+                            cmd,
+                            new SqlParameter("@id", SqlDbType.Int) { Value = txtID.Text }
+                            ) > 0)
+                        {
+                            alert("Palestrante excluído com sucesso!");
+                            limparCampos();
+                        }
+                        else
+                        {
+                            alert("Falha ao excluir Palestrante!");
+                        }
+                        atualizarGrid();
+                    }
                 }
                 else
                 {
@@ -309,20 +373,26 @@ namespace TCCADS.TELAS
                     int Linha = Convert.ToInt32(e.CommandArgument);
                     int idPalestranteAtual = Convert.ToInt32(gvPalestrantes.Rows[Linha].Cells[0].Text);
 
-                    SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                    SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, $"select * from palestrante where id = {idPalestranteAtual}");
-                    while (sqlDataReader.Read())
+                    using (ServicosDB db = new ServicosDB()) // READ DATABASE
                     {
-                        txtID.Text = Convert.ToString(sqlDataReader["id"]);
-                        txtNome.Text = Convert.ToString(sqlDataReader["nome"]);
-                        txtRG.Text = Convert.ToString(sqlDataReader["rg"]);
-                        txtCPF.Text = Convert.ToString(sqlDataReader["cpf"]);
-                        txtEmail.Text = Convert.ToString(sqlDataReader["email"]);
-                        txtTelefone.Text = Convert.ToString(sqlDataReader["telefone"]);
-                        txtFormacao.Text = Convert.ToString(sqlDataReader["formacao"]);
+                        string cmd = "select * from palestrante where id = @idPalestranteAtual";
+                        SqlDataReader dr = db.ExecQuery(
+                            cmd,
+                            new SqlParameter("@idPalestranteAtual", SqlDbType.Int) { Value = idPalestranteAtual }
+                            );
+
+                        if (dr.Read())
+                        {
+                            txtID.Text = Convert.ToString(dr["id"]);
+                            txtNome.Text = Convert.ToString(dr["nome"]);
+                            txtRG.Text = Convert.ToString(dr["rg"]);
+                            txtCPF.Text = Convert.ToString(dr["cpf"]);
+                            txtEmail.Text = Convert.ToString(dr["email"]);
+                            txtTelefone.Text = Convert.ToString(dr["telefone"]);
+                            txtFormacao.Text = Convert.ToString(dr["formacao"]);
+                        }
+                        dr.Close();
                     }
-                    sqlDataReader.Close();
-                    sqlConnection.Close();
                 }
                 catch (Exception exception)
                 {

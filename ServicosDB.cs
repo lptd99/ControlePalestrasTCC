@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace TCCADS
 {
@@ -29,24 +26,33 @@ namespace TCCADS
             Conexao.Open();
         }
 
-        public SqlCommand CriarCommand(string Sql)
+        public SqlCommand CriarCommand(string Sql, params SqlParameter[] ParametroBD)
         {
-            return new SqlCommand(Sql, Conexao);
+            SqlCommand cmd = new SqlCommand(Sql, Conexao);
+
+            if ((ParametroBD != null) && (ParametroBD.Length > 0))
+            {
+                foreach (var p in ParametroBD)
+                {
+                    cmd.Parameters.Add(p);
+                }
+            }
+            return cmd;
         }
 
-        public SqlDataReader ExecQuery(string Sql)
+        public SqlDataReader ExecQuery(string Sql, params SqlParameter[] ParametroBD)
         {
-            return CriarCommand(Sql).ExecuteReader();
+            return CriarCommand(Sql, ParametroBD).ExecuteReader();
         }
 
-        public int ExecUpdate(string Sql)
+        public int ExecUpdate(string Sql, params SqlParameter[] ParametroBD)
         {
-            return CriarCommand(Sql).ExecuteNonQuery();
+            return CriarCommand(Sql, ParametroBD).ExecuteNonQuery();
         }
 
-        public object QueryValue(string Sql)
+        public object QueryValue(string Sql, params SqlParameter[] ParametroBD)
         {
-            return CriarCommand(Sql).ExecuteScalar();
+            return CriarCommand(Sql, ParametroBD).ExecuteScalar();
         }
 
         public void Dispose()
@@ -73,6 +79,5 @@ namespace TCCADS
             SqlCommand sqlCommand = new SqlCommand(command, connection);    // EXECUTAR COMANDO
             return sqlCommand.ExecuteReader();                              // PERMITIR LEITURA
         }
-
     }
 }

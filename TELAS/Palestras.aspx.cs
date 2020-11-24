@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -16,8 +17,11 @@ namespace TCCADS.TELAS
         }
         public void atualizarGrid()
         {
-            gvPalestras.DataSource = gvPalestrasDataSource;
-            gvPalestras.DataBind();
+            using (ServicosDB db = new ServicosDB())
+            {
+                gvPalestras.DataSource = db.ExecQuery("SELECT [P].[id] as 'ID', [P].[nome] as 'Nome', [P].[dataHorarioInicio] as 'Data e Horário de Início', [P].[dataHorarioTermino] as 'Data e Horário de Término', [E].[nome] as 'Local', [P].[curso] as 'Curso', [PL].[nome] as 'Palestrante', CONCAT(CONCAT([P].[inscritos], '/'), [E].[capacidade]) as 'Inscritos' FROM [Palestra] as P INNER JOIN [Espaco] as E ON E.id = P.idEspaco INNER JOIN [Palestrante] as PL ON PL.id = P.idPalestrante where dataHorarioInicio > GETDATE()");
+                gvPalestras.DataBind();
+            }
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -37,60 +41,103 @@ namespace TCCADS.TELAS
         {
             if (e.CommandName == "inscrever")
             {
-                Boolean podeInscrever = false;
-                Boolean inscrito = false;
+                Boolean naoInscrito = false;
+                Boolean inscricaoEfetuada = false;
+                Boolean naoCheia = false;
 
                 int Linha = Convert.ToInt32(e.CommandArgument);
                 int idPalestraAtual = Convert.ToInt32(gvPalestras.Rows[Linha].Cells[0].Text);
 
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, $"select count(I.rgmParticipante) as contagem from inscricao as I inner join palestra as P on P.id = I.idPalestra where I.rgmParticipante = '{Session["RGM_Usuario"]}' and I.idPalestra = {idPalestraAtual}");
-                while (sqlDataReader.Read())
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
                 {
-                    if (Convert.ToInt32(sqlDataReader["contagem"]) > 0)
+                    string cmd = "select count(I.rgmParticipante) as contagem from inscricao as I inner join palestra as P on P.id = I.idPalestra where I.rgmParticipante = @RGM_Usuario and I.idPalestra = @idPalestraAtual";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = Session["RGM_Usuario"] },
+                        new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual });
+
+                    if (dr.Read())
                     {
-                        alert("Você já se inscreveu nesta Palestra!");
+                        if (Convert.ToInt32(dr["contagem"]) > 0)
+                        {
+                            alert("Você já se inscreveu nesta Palestra!");
+                        }
+                        else
+                        {
+                            naoInscrito = true;
+                        }
                     }
-                    else
-                    {
-                        podeInscrever = true;
-                    }
+                    dr.Close();
                 }
-                sqlDataReader.Close();
+
+                using (ServicosDB db = new ServicosDB())
+                {
+                    string cmd = "select E.capacidade as 'Capacidade', count(I.rgmParticipante) as 'Inscritos' from Palestra as P INNER JOIN Inscricao as I on P.id = I.idPalestra INNER JOIN Espaco as E on E.id = P.idEspaco where P.id = @idPalestraAtual";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual });
+
+                    if (dr.Read())
+                    {
+                        if (Convert.ToInt32(dr["Capacidade"]) > Convert.ToInt32(dr["Inscritos"]))
+                        {
+                            naoCheia = true;
+                        }
+                    }
+                    dr.Close();
+                }
 
                 try
                 {
-                    if (podeInscrever)
+                    if (naoInscrito && naoCheia)
                     {
-                        SqlCommand sqlCommand = new SqlCommand(
-                            $"insert into inscricao values('{Session["RGM_Usuario"]}', {idPalestraAtual}, 0, -1)",
-                            sqlConnection);
-                        sqlCommand.ExecuteNonQuery();
+                        using (ServicosDB db = new ServicosDB()) // INSERT DATABASE
+                        {
+                            string cmd = "insert into inscricao values(@RGM_Usuario, @idPalestraAtual, 0, -1)";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = Session["RGM_Usuario"] },
+                                new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual }
+                                ) > 0)
+                            { }
+                            else
+                            {
+                                alert("Falha ao adicionar Palestrante!");
+                            }
+                            atualizarGrid();
+                        }
                         alert("Inscrição efetuada com sucesso!");
-                        inscrito = true;
+                        inscricaoEfetuada = true;
                     }
                 }
                 catch (Exception ignored)
                 {
                     alert("Inscrição malsucedida!");
-                    inscrito = false;
+                    inscricaoEfetuada = false;
                 }
 
                 try
                 {
-                    if (inscrito)
+                    if (inscricaoEfetuada)
                     {
-                        SqlCommand sqlCommand = new SqlCommand(
-                            $"UPDATE palestra SET inscritos = (select count(idPalestra) from inscricao where idPalestra = {idPalestraAtual}) where id = {idPalestraAtual}",
-                        sqlConnection);
-                        sqlCommand.ExecuteNonQuery();
+                        using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                        {
+                            string cmd = "UPDATE palestra SET inscritos = (select count(idPalestra) from inscricao where idPalestra = @idPalestraAtual) where id = @idPalestraAtual";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual }
+                                ) > 0)
+                            { }
+                            else
+                            {
+                                alert("Falha ao adicionar Palestrante!");
+                            }
+                            atualizarGrid();
+                        }
                     }
                 }
                 catch (Exception ignored)
                 { }
-
-                sqlConnection.Close();
-                atualizarGrid();
             }
         }
     }

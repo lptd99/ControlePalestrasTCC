@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,21 @@ namespace TCCADS.TELAS
 
         #region Variaveis
         int nextID = 0;
+        int anoI;
+        int mesI;
+        int diaI;
+        int horaI;
+        int minutoI;
+        int segundoI;
+        String stringDataHorarioInicio = "";
+
+        int anoT;
+        int mesT;
+        int diaT;
+        int horaT;
+        int minutoT;
+        int segundoT;
+        String stringDataHorarioTermino = "";
         #endregion
 
         #region Metodos auxiliares
@@ -23,18 +39,23 @@ namespace TCCADS.TELAS
             try
             {
                 Boolean conflito = false;
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection,
-                    $"select count(id) as conflitos from Palestra where idEspaco = {ddlEspaco.SelectedValue} and ('{txtDataHorarioInicio.Text}' = dataHorarioInicio or ('{txtDataHorarioInicio.Text}' > dataHorarioInicio and '{txtDataHorarioInicio.Text}' < dataHorarioTermino) or ('{txtDataHorarioTermino.Text}' > dataHorarioInicio and '{txtDataHorarioTermino.Text}' < dataHorarioTermino) or '{txtDataHorarioTermino.Text}' = dataHorarioTermino)");
-                while (sqlDataReader.Read())
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
                 {
-                    try
+                    string cmd = "select count(id) as conflitos from Palestra where idEspaco = @idEspaco and (@dataHorarioInicio = dataHorarioInicio or (@dataHorarioInicio > dataHorarioInicio and @dataHorarioInicio < dataHorarioTermino) or (@dataHorarioTermino > dataHorarioInicio and @dataHorarioTermino < dataHorarioTermino) or @dataHorarioTermino = dataHorarioTermino)";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@idEspaco", SqlDbType.Int) { Value = ddlEspaco.SelectedValue },
+                        new SqlParameter("@dataHorarioInicio", SqlDbType.VarChar, 30) { Value = txtDataHorarioInicio.Text },
+                        new SqlParameter("@dataHorarioTermino", SqlDbType.VarChar, 30) { Value = txtDataHorarioTermino.Text }
+                        );
+
+                    if (dr.Read())
                     {
-                        conflito = Convert.ToInt32(sqlDataReader["conflitos"]) > 0;
+                        conflito = Convert.ToInt32(dr["conflitos"]) > 0;
                     }
-                    catch (Exception ignored)
-                    { }
+                    dr.Close();
                 }
+
                 if (conflito)
                 {
                     alert("Este horário conflita com uma Palestra já existente no mesmo local!");
@@ -53,24 +74,26 @@ namespace TCCADS.TELAS
                 String[] dataHorarioInicioPair = txtDataHorarioInicio.Text.Split(' ');
                 String[] splitDateInicio = dataHorarioInicioPair[0].Split('-');
                 String[] splitTimeInicio = dataHorarioInicioPair[1].Split(':');
-                int anoI = Convert.ToInt32(splitDateInicio[0]);
-                int mesI = Convert.ToInt32(splitDateInicio[2]);
-                int diaI = Convert.ToInt32(splitDateInicio[1]);
-                int horaI = Convert.ToInt32(splitTimeInicio[0]);
-                int minutoI = Convert.ToInt32(splitTimeInicio[1]);
-                int segundoI = Convert.ToInt32(splitTimeInicio[2]);
-                DateTime dataHorarioInicio = new DateTime(Convert.ToInt32(splitDateInicio[0]), Convert.ToInt32(splitDateInicio[2]), Convert.ToInt32(splitDateInicio[1]), Convert.ToInt32(splitTimeInicio[0]), Convert.ToInt32(splitTimeInicio[1]), Convert.ToInt32(splitTimeInicio[2]));
+                anoI = Convert.ToInt32(splitDateInicio[0]);
+                mesI = Convert.ToInt32(splitDateInicio[2]);
+                diaI = Convert.ToInt32(splitDateInicio[1]);
+                horaI = Convert.ToInt32(splitTimeInicio[0]);
+                minutoI = Convert.ToInt32(splitTimeInicio[1]);
+                segundoI = Convert.ToInt32(splitTimeInicio[2]);
+                DateTime dataHorarioInicio = new DateTime(anoI, mesI, diaI, horaI, minutoI, segundoI);
+                stringDataHorarioInicio = splitDateInicio[0] + "-" + splitDateInicio[2] + "-" + splitDateInicio[1] + " " + splitTimeInicio[0] + ":" + splitTimeInicio[1] + ":" + splitTimeInicio[2];
 
                 String[] dataHorarioTerminoPair = txtDataHorarioTermino.Text.Split(' ');
                 String[] splitDateTermino = dataHorarioTerminoPair[0].Split('-');
                 String[] splitTimeTermino = dataHorarioTerminoPair[1].Split(':');
-                int anoP = Convert.ToInt32(splitDateTermino[0]);
-                int mesP = Convert.ToInt32(splitDateTermino[2]);
-                int diaP = Convert.ToInt32(splitDateTermino[1]);
-                int horaP = Convert.ToInt32(splitTimeTermino[0]);
-                int minutoP = Convert.ToInt32(splitTimeTermino[1]);
-                int segundoP = Convert.ToInt32(splitTimeTermino[2]);
-                DateTime dataHorarioTermino = new DateTime(Convert.ToInt32(splitDateTermino[0]), Convert.ToInt32(splitDateTermino[2]), Convert.ToInt32(splitDateTermino[1]), Convert.ToInt32(splitTimeTermino[0]), Convert.ToInt32(splitTimeTermino[1]), Convert.ToInt32(splitTimeTermino[2]));
+                anoT = Convert.ToInt32(splitDateTermino[0]);
+                mesT = Convert.ToInt32(splitDateTermino[2]);
+                diaT = Convert.ToInt32(splitDateTermino[1]);
+                horaT = Convert.ToInt32(splitTimeTermino[0]);
+                minutoT = Convert.ToInt32(splitTimeTermino[1]);
+                segundoT = Convert.ToInt32(splitTimeTermino[2]);
+                DateTime dataHorarioTermino = new DateTime(anoT, mesT, diaT, horaT, minutoT, segundoT);
+                stringDataHorarioTermino = splitDateTermino[0] + "-" + splitDateTermino[2] + "-" + splitDateTermino[1] + " " + splitTimeTermino[0] + ":" + splitTimeTermino[1] + ":" + splitTimeTermino[2];
 
 
                 if (dataHorarioInicio == dataHorarioTermino || dataHorarioInicio > dataHorarioTermino )
@@ -144,18 +167,24 @@ namespace TCCADS.TELAS
             #region prevenir conflito de horario e espaco
             try
             {
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection,
-                    $"select count(id) as conflitos from Palestra where idEspaco = {ddlEspaco.SelectedValue} and ('{txtDataHorarioInicio.Text}' = dataHorarioInicio or ('{txtDataHorarioInicio.Text}' > dataHorarioInicio and '{txtDataHorarioInicio.Text}' < dataHorarioTermino) or ('{txtDataHorarioTermino.Text}' > dataHorarioInicio and '{txtDataHorarioTermino.Text}' < dataHorarioTermino) or '{txtDataHorarioTermino.Text}' = dataHorarioTermino) and id != {txtID.Text}");
-                while (sqlDataReader.Read())
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
                 {
-                    try
+                    string cmd = "select count(id) as conflitos from Palestra where idEspaco = @idEspaco and (@dataHorarioInicio = dataHorarioInicio or (@dataHorarioInicio > dataHorarioInicio and @dataHorarioInicio < dataHorarioTermino) or (@dataHorarioTermino > dataHorarioInicio and @dataHorarioTermino < dataHorarioTermino) or @dataHorarioTermino = dataHorarioTermino) and id != @idPalestraAtual";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@idEspaco", SqlDbType.Int) { Value = ddlEspaco.SelectedValue },
+                        new SqlParameter("@dataHorarioInicio", SqlDbType.VarChar, 30) { Value = txtDataHorarioInicio.Text },
+                        new SqlParameter("@dataHorarioTermino", SqlDbType.VarChar, 30) { Value = txtDataHorarioTermino.Text },
+                        new SqlParameter("@idPalestraAtual", SqlDbType.VarChar, 30) { Value = txtID.Text }
+                        );
+
+                    if (dr.Read())
                     {
-                        conflito = Convert.ToInt32(sqlDataReader["conflitos"]) > 0;
+                        conflito = Convert.ToInt32(dr["conflitos"]) > 0;
                     }
-                    catch (Exception ignored)
-                    { }
+                    dr.Close();
                 }
+
                 if (conflito)
                 {
                     alert("Este horário conflita com uma Palestra já existente no mesmo local!");
@@ -181,20 +210,23 @@ namespace TCCADS.TELAS
         }
         public int getNextID()
         {
-            SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-            SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, "select max(id) as lastID from palestra");
-            while (sqlDataReader.Read())
+            using (ServicosDB db = new ServicosDB()) // READ DATABASE
             {
-                try
+                string cmd = "select max(id) as lastID from palestra";
+                SqlDataReader dr = db.ExecQuery(
+                    cmd
+                    );
+
+                if (dr.Read())
                 {
-                    nextID = Convert.ToInt32(sqlDataReader["lastID"]) + 1;
+                    nextID = Convert.ToInt32(dr["lastID"]) + 1;
                 }
-                catch (Exception ignored)
+                else
                 {
                     nextID = 0;
                 }
+                dr.Close();
             }
-            sqlDataReader.Close();
             return nextID;
         }
         public void limparCampos()
@@ -237,23 +269,32 @@ namespace TCCADS.TELAS
 
         protected void btnAdicionar_Click(object sender, EventArgs e)
         {
-            try
+            if (cadastroPalestraValidation())
             {
-                SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                if (cadastroPalestraValidation())
+                using (ServicosDB db = new ServicosDB()) // INSERT DATABASE
                 {
-                    SqlCommand sqlCommand = new SqlCommand(
-                        $"insert into palestra values({ddlPalestrante.SelectedValue}, {ddlCoordenador.SelectedValue}, '{txtNome.Text}', '{txtDataHorarioInicio.Text}', '{txtDataHorarioTermino.Text}', '{txtCurso.Text}', {ddlEspaco.SelectedValue}, NULL, 0)",
-                        sqlConnection);
-                    sqlCommand.ExecuteNonQuery();
-                limparCampos();
+                    string cmd = "insert into palestra values(@idPalestrante, @rgmCoordenador, @nome, @dataHorarioInicio, @dataHorarioTermino, @curso, @idEspaco, NULL, 0)";
+                    if (db.ExecUpdate(
+                        cmd,
+                        new SqlParameter("@idPalestrante", SqlDbType.Int) { Value = ddlPalestrante.SelectedValue },
+                        new SqlParameter("@rgmCoordenador", SqlDbType.VarChar, 20) { Value = ddlCoordenador.SelectedValue },
+                        new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                        new SqlParameter("@dataHorarioInicio", SqlDbType.DateTime) { Value = stringDataHorarioInicio },
+                        new SqlParameter("@dataHorarioTermino", SqlDbType.DateTime) { Value = stringDataHorarioTermino },
+                        new SqlParameter("@curso", SqlDbType.VarChar, 100) { Value = txtCurso.Text },
+                        new SqlParameter("@idEspaco", SqlDbType.Int) { Value = ddlEspaco.SelectedValue }
+                        ) > 0)
+                    {
+                        int id = Convert.ToInt32(db.QueryValue("select @@identity"));
+                        txtID.Text = $"{id}";
+                        limparCampos();
+                    }
+                    else
+                    {
+                        alert("Falha ao adicionar Palestra!");
+                    }
+                    atualizarGrid();
                 }
-                sqlConnection.Close();
-                atualizarGrid();
-            }
-            catch (Exception exception)
-            {
-                alert("Falha ao Adicionar Palestra. Erro: " + exception.ToString());
             }
         }
 
@@ -265,12 +306,29 @@ namespace TCCADS.TELAS
                 {
                     if (Convert.ToInt32(txtID.Text) < getNextID())
                     {
-                        SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                        SqlCommand sqlCommand = new SqlCommand(
-                            $"UPDATE palestra SET idPalestrante = {ddlPalestrante.SelectedValue}, rgmCoordenador = {ddlCoordenador.SelectedValue}, nome = '{txtNome.Text}', dataHorarioInicio = '{txtDataHorarioInicio.Text}', dataHorarioTermino = '{txtDataHorarioTermino.Text}', curso = '{txtCurso.Text}', idEspaco = {ddlEspaco.SelectedValue} WHERE id = {txtID.Text}",
-                            sqlConnection);
-                        sqlCommand.ExecuteNonQuery();
-                        limparCampos();
+                        using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                        {
+                            string cmd = "update palestra set idPalestrante = @idPalestrante, rgmCoordenador = @rgmCoordenador, nome = @nome, dataHorarioInicio = @dataHorarioInicio, dataHorarioTermino = @dataHorarioTermino, curso = @curso, idEspaco = @idEspaco where id = @idPalestraAtual";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@idPalestrante", SqlDbType.Int) { Value = ddlPalestrante.SelectedValue },
+                                new SqlParameter("@rgmCoordenador", SqlDbType.Int) { Value = ddlCoordenador.SelectedValue },
+                                new SqlParameter("@nome", SqlDbType.VarChar, 100) { Value = txtNome.Text },
+                                new SqlParameter("@dataHorarioInicio", SqlDbType.DateTime) { Value = txtDataHorarioInicio.Text },
+                                new SqlParameter("@dataHorarioTermino", SqlDbType.DateTime) { Value = txtDataHorarioTermino.Text },
+                                new SqlParameter("@curso", SqlDbType.VarChar, 100) { Value = txtCurso.Text },
+                                new SqlParameter("@idEspaco", SqlDbType.Int) { Value = ddlEspaco.SelectedValue },
+                                new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = txtID.Text }
+                                ) > 0)
+                            {
+                                alert("Palestra alterada com sucesso!");
+                                limparCampos();
+                            }
+                            else
+                            {
+                                alert("Falha ao alterar Palestra!");
+                            }
+                        }
                     }
                     else
                     {
@@ -291,11 +349,23 @@ namespace TCCADS.TELAS
             {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
-                    SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                    SqlCommand sqlCommand = new SqlCommand(
-                        $"DELETE FROM palestra WHERE id = {txtID.Text}",
-                        sqlConnection);
-                    sqlCommand.ExecuteNonQuery();
+                    using (ServicosDB db = new ServicosDB()) // DELETE DATABASE
+                    {
+                        string cmd = "delete from palestra where id = @idPalestraAtual";
+                        if (db.ExecUpdate(
+                            cmd,
+                            new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = txtID.Text }
+                            ) > 0)
+                        {
+                            alert("Palestra excluída com sucesso!");
+                            limparCampos();
+                        }
+                        else
+                        {
+                            alert("Falha ao excluir Palestra!");
+                        }
+                        atualizarGrid();
+                    }
                 }
                 else
                 {
@@ -324,23 +394,27 @@ namespace TCCADS.TELAS
                     int Linha = Convert.ToInt32(e.CommandArgument);
                     int idPalestraAtual = Convert.ToInt32(gvPalestras.Rows[Linha].Cells[0].Text);
 
-                    SqlConnection sqlConnection = ServicosDB.createSQLServerConnection(@"DESKTOP_PCH001\TCCADS01", "TCCADS", "sa", "admin00");
-                    SqlDataReader sqlDataReader = ServicosDB.createSQLCommandReader(sqlConnection, $"select * from palestra where id = {idPalestraAtual}");
-                    while (sqlDataReader.Read())
+                    using (ServicosDB db = new ServicosDB())
                     {
-                        txtID.Text = Convert.ToString(sqlDataReader["id"]);
-                        ddlPalestrante.SelectedValue = Convert.ToString(sqlDataReader["idPalestrante"]);
-                        ddlCoordenador.SelectedValue = Convert.ToString(sqlDataReader["rgmCoordenador"]);
-                        txtNome.Text = Convert.ToString(sqlDataReader["nome"]);
-                        txtDataHorarioInicio.Text = Convert.ToDateTime(sqlDataReader["dataHorarioInicio"]).ToString("yyyy-dd-MM HH:mm:ss");
-                        txtDataHorarioTermino.Text = Convert.ToDateTime(sqlDataReader["dataHorarioTermino"]).ToString("yyyy-dd-MM HH:mm:ss");
-                        txtCurso.Text = Convert.ToString(sqlDataReader["curso"]);
-                        ddlEspaco.SelectedValue = Convert.ToString(sqlDataReader["idEspaco"]);
-                        txtNota.Text = Convert.ToString(sqlDataReader["nota"]);
-                        txtInscritos.Text = Convert.ToString(sqlDataReader["inscritos"]);
+                        SqlDataReader dr = db.ExecQuery(
+                            "select * from palestra where id = @idPalestraAtual",
+                            new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual});
+
+                        if (dr.Read())
+                        {
+                            txtID.Text = $"{dr["id"]}";
+                            ddlPalestrante.SelectedValue = $"{dr["idPalestrante"]}";
+                            ddlCoordenador.SelectedValue = $"{dr["rgmCoordenador"]}";
+                            txtNome.Text = $"{dr["nome"]}";
+                            txtDataHorarioInicio.Text = $"{Convert.ToDateTime(dr["dataHorarioInicio"]).ToString("yyyy-dd-MM HH:mm:ss")}";
+                            txtDataHorarioTermino.Text = $"{Convert.ToDateTime(dr["dataHorarioTermino"]).ToString("yyyy-dd-MM HH:mm:ss")}";
+                            txtCurso.Text = $"{dr["curso"]}";
+                            ddlEspaco.SelectedValue = $"{dr["idEspaco"]}";
+                            txtNota.Text = $"{dr["nota"]}";
+                            txtInscritos.Text = $"{dr["inscritos"]}";
+                        }
+                        dr.Close();
                     }
-                    sqlDataReader.Close();
-                    sqlConnection.Close();
                 }
                 catch (Exception exception)
                 {
