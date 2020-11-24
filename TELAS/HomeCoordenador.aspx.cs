@@ -30,16 +30,6 @@ namespace TCCADS.TELAS
             Response.Redirect("Home.aspx");
         }
 
-        protected void btnPalestras_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Palestras.aspx");
-        }
-
-        protected void btnMinhasPalestras_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("MinhasPalestras.aspx");
-        }
-
         protected void btnGerenciarPalestras_Click(object sender, EventArgs e)
         {
             Response.Redirect("GerenciarPalestras.aspx");

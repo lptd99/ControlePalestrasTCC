@@ -70,7 +70,7 @@ namespace TCCADS.TELAS
                     dr.Close();
                 }
 
-                using (ServicosDB db = new ServicosDB())
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
                 {
                     string cmd = "select E.capacidade as 'Capacidade', count(I.rgmParticipante) as 'Inscritos' from Palestra as P INNER JOIN Inscricao as I on P.id = I.idPalestra INNER JOIN Espaco as E on E.id = P.idEspaco where P.id = @idPalestraAtual";
                     SqlDataReader dr = db.ExecQuery(
