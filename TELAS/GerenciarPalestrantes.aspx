@@ -87,8 +87,8 @@
                     <asp:ButtonField ButtonType="Button" CommandName="carregar" Text="Carregar" />
                 </Columns>
             </asp:GridView>
-            <asp:SqlDataSource ID="gvPalestrantesDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:TCCADSConnectionString %>" SelectCommand="SELECT [id], [nome], [email], [telefone], [formacao] FROM [Palestrante]"></asp:SqlDataSource>
-            <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click"/>
+            <!--<asp:SqlDataSource ID="gvPalestrantesDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:TCCADSConnectionString %>" SelectCommand="SELECT [id], [nome], [email], [telefone], [formacao] FROM [Palestrante]"></asp:SqlDataSource>
+            --><asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click"/>
         </div>
     </form>
 </body>
