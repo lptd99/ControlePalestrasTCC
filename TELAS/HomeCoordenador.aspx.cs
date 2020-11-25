@@ -44,5 +44,9 @@ namespace TCCADS.TELAS
         {
             Response.Redirect("GerenciarPalestrantes.aspx");
         }
+        protected void btnCadastrarCoordenador_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("CadastrarCoordenador.aspx");
+        }
     }
 }

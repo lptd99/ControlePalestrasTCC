@@ -268,10 +268,16 @@ namespace TCCADS.TELAS
             {
                 ddlCoordenador.DataSource = db.ExecQuery($"SELECT [rgm], [nome] FROM [Coordenador]");
                 ddlCoordenador.DataBind();
+            }
 
+            using (ServicosDB db = new ServicosDB())
+            {
                 ddlPalestrante.DataSource = db.ExecQuery($"SELECT [id], [nome] FROM [Palestrante]");
                 ddlPalestrante.DataBind();
+            }
 
+                using (ServicosDB db = new ServicosDB())
+            {
                 ddlEspaco.DataSource = db.ExecQuery($"SELECT [id], [nome], [capacidade] FROM [Espaco]");
                 ddlEspaco.DataBind();
             }
@@ -416,7 +422,7 @@ namespace TCCADS.TELAS
                     {
                         SqlDataReader dr = db.ExecQuery(
                             "select * from palestra where id = @idPalestraAtual",
-                            new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual});
+                            new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual });
 
                         if (dr.Read())
                         {
@@ -437,6 +443,29 @@ namespace TCCADS.TELAS
                 catch (Exception exception)
                 {
                     alert("Falha ao Carregar Palestra. Erro: " + exception.ToString());
+                }
+            }
+
+            if (e.CommandName == "enviar_presenca")
+            {
+                try
+                {
+                    int Linha = Convert.ToInt32(e.CommandArgument);
+                    DateTime dataHorarioTermino = Convert.ToDateTime(gvPalestras.Rows[Linha].Cells[3].Text);
+                    if (dataHorarioTermino < DateTime.Now)
+                    {
+                        Session["Enviar_Presenca_Palestra_ID"] = Convert.ToString(gvPalestras.Rows[Linha].Cells[0].Text);
+                        Session["Enviar_Presenca_Palestra_Nome"] = Convert.ToString(gvPalestras.Rows[Linha].Cells[1].Text);
+                        Response.Redirect("EnviarPresenca.aspx");
+                    }
+                    else
+                    {
+                        alert("Esta Palestra ainda não acabou!");
+                    }
+                }
+                catch
+                {
+                    alert("Falha ao entrar na tela de envio de presença.");
                 }
             }
         }

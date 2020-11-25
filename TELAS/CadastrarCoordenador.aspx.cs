@@ -171,7 +171,7 @@ namespace TCCADS.TELAS
 
         protected void btnVoltar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("LoginCoordenador.aspx");
+            Response.Redirect("HomeCoordenador.aspx");
         }
     }
 }

@@ -17,6 +17,22 @@ namespace TCCADS.TELAS
             Response.Write($"<script>alert('{Msg}');</script>");
         }
 
+        public Boolean validarCampos()
+        {
+            Boolean valid = true;
+            if (txtRGM.Text == "" || txtRGM.Text.Length != 11)
+            {
+                valid = false;
+                alert("RGM inválido!");
+            }
+            if (txtSenha.Text == "" || txtSenha.Text.Length > 30)
+            {
+                valid = false;
+                alert("Senha inválida!");
+            }
+            return valid;
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -29,38 +45,35 @@ namespace TCCADS.TELAS
 
         protected void btnEntrar_Click(object sender, EventArgs e)
         {
-            using (ServicosDB db = new ServicosDB()) // READ DATABASE
+            if (validarCampos())
             {
-                String password = SHA256.Create(txtSenha.Text).ToString();
-                string cmd = "select rgm, senha from coordenador where rgm = @rgm";
-                SqlDataReader dr = db.ExecQuery(
-                    cmd,
-                    new SqlParameter("@rgm", SqlDbType.VarChar, 20) { Value = txtRGM.Text }
-                    );
-                if (dr.Read())
+                using (ServicosDB db = new ServicosDB()) // READ DATABASE
                 {
-                    if (Convert.ToString(dr["rgm"]) == txtRGM.Text && Convert.ToString(dr["senha"]) == ServicosDB.stringToSHA256(txtSenha.Text))
+                    string cmd = "select rgm, senha from coordenador where rgm = @rgm";
+                    SqlDataReader dr = db.ExecQuery(
+                        cmd,
+                        new SqlParameter("@rgm", SqlDbType.VarChar, 20) { Value = txtRGM.Text }
+                        );
+                    if (dr.Read())
                     {
-                        Session["RGM_Usuario"] = txtRGM.Text;
-                        Session["Coordenador"] = true;
-                        Response.Redirect("HomeCoordenador.aspx");
+                        if (Convert.ToString(dr["rgm"]) == txtRGM.Text && Convert.ToString(dr["senha"]) == ServicosDB.stringToSHA256(txtSenha.Text))
+                        {
+                            Session["RGM_Usuario"] = txtRGM.Text;
+                            Session["Coordenador"] = true;
+                            Response.Redirect("HomeCoordenador.aspx");
+                        }
+                        else
+                        {
+                            alert("RGM não cadastrado ou Senha incorreta!");
+                        }
                     }
                     else
                     {
                         alert("RGM não cadastrado ou Senha incorreta!");
                     }
+                    dr.Close();
                 }
-                else
-                {
-                    alert("RGM não cadastrado ou Senha incorreta!");
-                }
-                dr.Close();
             }
-        }
-
-        protected void btnCadastrar_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("CadastrarCoordenador.aspx");
         }
 
         protected void btnEsqueciMinhaSenha_Click(object sender, EventArgs e)
