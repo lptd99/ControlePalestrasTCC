@@ -19,7 +19,7 @@ h1, h2 {
     background-color: whitesmoke;
 }
 
-.button, button {
+.button, button, [id*=btn] {
     border: none;
     min-width: 100px;
     padding: 7px;
@@ -30,11 +30,11 @@ h1, h2 {
     transition-duration: 0.2s;
 }
 
-button:hover, .button:hover, #ativo{
-    background-color: #1062a2;
-    color: whitesmoke;
-    text-decoration: none;
-}
+    button:hover, .button:hover, #ativo, [id*=btn]:hover {
+        background-color: #1062a2;
+        color: whitesmoke;
+        text-decoration: none;
+    }
 
 div {
     margin-bottom: 10px;

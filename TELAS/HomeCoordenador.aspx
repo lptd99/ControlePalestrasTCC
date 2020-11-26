@@ -17,6 +17,7 @@
                         <asp:Button ID="btnGerenciarPalestras" runat="server" Text="Gerenciar Palestras" OnClick="btnGerenciarPalestras_Click" />
                         <asp:Button ID="btnGerenciarEspacos" runat="server" Text="Gerenciar Espaços" OnClick="btnGerenciarEspacos_Click" />
                         <asp:Button ID="btnGerenciarPalestrantes" runat="server" Text="Gerenciar Palestrantes" OnClick="btnGerenciarPalestrantes_Click" />
+                        <asp:Button ID="btnCadastrarCoordenador" runat="server" Text="Cadastrar Coordenador" OnClick="btnCadastrarCoordenador_Click" />
                     </td>
                 </tr>
             </table>

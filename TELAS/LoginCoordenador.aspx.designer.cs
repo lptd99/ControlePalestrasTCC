@@ -7,12 +7,10 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace TCCADS.TELAS
-{
+namespace TCCADS.TELAS {
 
 
-    public partial class LoginCoordenador
-    {
+    public partial class LoginCoordenador {
 
         /// <summary>
         /// Controle form1.
@@ -42,15 +40,6 @@ namespace TCCADS.TELAS
         protected global::System.Web.UI.WebControls.TextBox txtSenha;
 
         /// <summary>
-        /// Controle btnEsqueciMinhaSenha.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnEsqueciMinhaSenha;
-
-        /// <summary>
         /// Controle btnEntrar.
         /// </summary>
         /// <remarks>
@@ -58,6 +47,15 @@ namespace TCCADS.TELAS
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEntrar;
+
+        /// <summary>
+        /// Controle btnEsqueciMinhaSenha.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEsqueciMinhaSenha;
 
         /// <summary>
         /// Controle btnCadastrar.

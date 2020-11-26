@@ -139,6 +139,7 @@
                     <ItemStyle HorizontalAlign="Left" VerticalAlign="Middle" />
                     </asp:BoundField>
                     <asp:ButtonField ButtonType="Button" CommandName="carregar" Text="Carregar" />
+                    <asp:ButtonField ButtonType="Button" CommandName="enviar_presenca" Text="Enviar Presença" />
                 </Columns>
             </asp:GridView>
             <!--<asp:SqlDataSource ID="gvPalestrasDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:TCCADSConnectionString %>" SelectCommand="SELECT [P].[id] as 'ID', [P].[nome] as 'Nome', [P].[dataHorarioInicio] as 'Data e Horário de Início', [P].[dataHorarioTermino] as 'Data e Horário de Término', [E].[nome] as 'Local', [P].[curso] as 'Curso', [PL].[nome] as 'Palestrante', CONCAT(CONCAT([P].[inscritos], '/'), [E].[capacidade]) as 'Inscritos' FROM [Palestra] as P INNER JOIN [Espaco] as E ON E.id = P.idEspaco INNER JOIN [Palestrante] as PL ON PL.id = P.idPalestrante"></asp:SqlDataSource>

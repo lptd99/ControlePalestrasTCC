@@ -10,7 +10,7 @@
 <body>
     <form id="form1" runat="server">
         <div>
-            Insira seu Email para receber uma nova senha
+            Insira seu RGM para receber uma nova senha
             <table>
                 <tr>
                     <td>
