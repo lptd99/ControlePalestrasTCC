@@ -7,44 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Login</title>
     <link rel="stylesheet" href="../CSS/standard.css" />
-    <style>
-    body {
-        background: url("http://teatroumc.com.br/wp-content/uploads/2012/03/teatro2.jpg")
-        no-repeat;
-        background-size: cover;
-        height: 100%;
-        width: 100%/*calc(1920 - 50%)*/;
-        overflow: hidden;
-    }
-
-    .aspNetHidden {
-        display: none;
-    }
-
-    .form-signin {
-        position: relative;
-        text-align: center;
-        background-color: white;
-        width: 100%;
-        max-width: 370px;
-        min-height: 440px;
-        margin: 5% 10%;
-        padding: 40px;
-        float: right;
-    }
-
-
-
-    .form-signin input[type="text"], .form-signin input[type="password"] {
-        border: 1px solid black;
-        position: relative;
-        margin: auto;
-        margin-bottom: 10px;
-        padding: 10px;
-        width: 70%;
-    }
-
-    </style>
+    <link rel="stylesheet" href="../CSS/Login.css" />
 </head>
 <body>
 <form id="form1" class="form-signin" runat="server">
