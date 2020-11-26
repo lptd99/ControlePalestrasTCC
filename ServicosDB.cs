@@ -11,6 +11,8 @@ namespace TCCADS
         public const string BANCO = "TCCADS";
         public const string USUARIO = "sa";
         public const string SENHA = "admin00";
+        public const string AWSAccessKey = "AKIA2BIJLNE4POUGQI7J";
+        public const string AWSSecretKey = "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";
 
         public static String stringToSHA256(string value)
         {
