@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login</title>
     <link rel="stylesheet" href="../CSS/standard.css" />
     <style>
     body {
@@ -25,44 +26,40 @@
         text-align: center;
         background-color: white;
         width: 100%;
-        max-width: 440px;
+        max-width: 370px;
         min-height: 440px;
-        margin: 10%;
+        margin: 5% 10%;
         padding: 40px;
         float: right;
     }
 
 
 
-    .form-signin input[type="text"] {
+    .form-signin input[type="text"], .form-signin input[type="password"] {
+        border: 1px solid black;
         position: relative;
         margin: auto;
+        margin-bottom: 10px;
+        padding: 10px;
         width: 70%;
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
     }
 
-    .form-signin input[type="password"] {
-        position: relative;
-        margin: auto;
-        width: 70%;
-        border-top-left-radius: 0px;
-        border-top-right-radius: 0px;
-    }
     </style>
 </head>
 <body>
 <form id="form1" class="form-signin" runat="server">
-<div>
-    <asp:TextBox ID="txtRGM" runat="server" Placeholder="RGM"></asp:TextBox>
-    <asp:TextBox ID="txtSenha" runat="server" TextMode="Password" Placeholder="Senha"></asp:TextBox>      
-</div>
+    <img class="text-center" src="http://aluno.umc.br/imagens/logo.svg" width="140px" />
+
+    <h1>UMC Palestras</h1>
+    <h2>Portal do coordenador</h2>
+
+    <div>
+        <asp:TextBox ID="txtRGM" runat="server" Placeholder="RGM"></asp:TextBox>
+        <asp:TextBox ID="txtSenha" runat="server" TextMode="Password" Placeholder="Senha"></asp:TextBox>      
+    </div>
             
     <asp:Button ID="btnEntrar" runat="server" Text="Entrar" OnClick="btnEntrar_Click" />
-    <asp:Button ID="btnEsqueciMinhaSenha" runat="server" Text="Esqueci minha senha" OnClick="btnEsqueciMinhaSenha_Click" />
-            
-    <!-- <asp:Button ID="btnCadastrar" runat="server" Text="Cadastrar" OnClick="btnCadastrar_Click" />
-    -->        
+    <asp:Button ID="btnEsqueciMinhaSenha"  runat="server" Text="Esqueci minha senha" OnClick="btnEsqueciMinhaSenha_Click" />
     <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click" />
 </form>
 </body>
