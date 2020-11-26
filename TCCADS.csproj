@@ -89,6 +89,7 @@
     <Content Include="TELAS\AvaliarPalestra.aspx" />
     <Content Include="TELAS\CadastrarCoordenador.aspx" />
     <Content Include="TELAS\CadastrarParticipante.aspx" />
+    <Content Include="TELAS\EnviarPresenca.aspx" />
     <Content Include="TELAS\EsqueciASenha.aspx" />
     <Content Include="TELAS\GerenciarPalestrantes.aspx" />
     <Content Include="TELAS\GerenciarPalestras.aspx" />
@@ -112,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServicosDB.cs" />
     <Compile Include="TELAS\AvaliarPalestra.aspx.cs">
       <DependentUpon>AvaliarPalestra.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -132,6 +134,12 @@
     </Compile>
     <Compile Include="TELAS\CadastrarParticipante.aspx.designer.cs">
       <DependentUpon>CadastrarParticipante.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TELAS\EnviarPresenca.aspx.cs">
+      <DependentUpon>EnviarPresenca.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TELAS\EnviarPresenca.aspx.designer.cs">
+      <DependentUpon>EnviarPresenca.aspx</DependentUpon>
     </Compile>
     <Compile Include="TELAS\EsqueciASenha.aspx.cs">
       <DependentUpon>EsqueciASenha.aspx</DependentUpon>
