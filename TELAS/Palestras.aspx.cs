@@ -54,7 +54,8 @@ namespace TCCADS.TELAS
                     SqlDataReader dr = db.ExecQuery(
                         cmd,
                         new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = Session["RGM_Usuario"] },
-                        new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual });
+                        new SqlParameter("@idPalestraAtual", SqlDbType.Int) { Value = idPalestraAtual }
+                        );
 
                     if (dr.Read())
                     {

@@ -80,7 +80,17 @@ namespace TCCADS.TELAS
                     }
                     emailAlert = emailAlert + "@" + email.Split('@')[1];
 
-                    nova_senha = rgm + DateTime.Today;
+                    try
+                    {
+                        DateTime data = DateTime.Now;
+                        int seed = Convert.ToInt32(data.Month.ToString() + data.Day.ToString() + data.Minute.ToString() + data.Second.ToString());
+                        Random dice = new Random(seed);
+                        nova_senha = Convert.ToString(dice.Next(111111111, 999999999));
+                    }
+                    catch
+                    {
+                        alert("Erro ao gerar nova senha. Tente novamente mais tarde.");
+                    }
 
                     try
                     {
@@ -90,7 +100,7 @@ namespace TCCADS.TELAS
                             if (db.ExecUpdate(
                                 cmd,
                                 new SqlParameter("@senha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(nova_senha) },
-                                new SqlParameter("@rgm", SqlDbType.VarChar, 256) { Value = rgm }
+                                new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = rgm }
                                 ) > 0)
                             { }
                             else

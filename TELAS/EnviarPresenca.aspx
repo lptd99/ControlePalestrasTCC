@@ -35,11 +35,12 @@
                         <asp:TextBox ID="txtPresentes" runat="server" TextMode="MultiLine" Height="200px" Width="150px"></asp:TextBox>
                     </td>
                     <td>
-                        <asp:Button ID="btnEnviar" runat="server" Text="Enviar" OnClick="btnEnviar_Click" Width="75px" />
+                        Digite os RGMs<br />de cada aluno que<br />participou desta reunião,<br />um por linha. <br />
                     </td>
                 </tr>
             </table>
         </div>
+        <asp:Button ID="btnEnviar" runat="server" Text="Enviar" OnClick="btnEnviar_Click" Width="75px" />
         <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click" />
     </form>
 </body>

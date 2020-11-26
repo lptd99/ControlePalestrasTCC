@@ -244,7 +244,7 @@ namespace TCCADS.TELAS
                         }
                         else
                         {
-                            alert("Falha ao adicionar Espaço!");
+                            alert("Um ou mais campos inválidos!");
                         }
                         atualizarGrid();
                     }

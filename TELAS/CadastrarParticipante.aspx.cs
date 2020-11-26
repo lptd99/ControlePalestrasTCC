@@ -47,7 +47,7 @@ namespace TCCADS.TELAS
             }
 
             // Senha validation
-            if (pwdSenha.Text != pwdConfirma.Text || pwdSenha.Text.Length > 30)
+            if (pwdSenha.Text != pwdConfirma.Text || pwdSenha.Text.Length > 30 || pwdSenha.Text == "")
             {
                 valid = false;
                 alert("Senha inválida! Ambos os campos de senha devem ser iguais e ter um máximo de 30 caracteres.");

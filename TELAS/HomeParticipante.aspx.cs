@@ -33,5 +33,10 @@ namespace TCCADS.TELAS
         {
             Response.Redirect("MinhasPalestras.aspx");
         }
+
+        protected void btnAlterarSenha_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("AlterarSenhaParticipante.aspx");
+        }
     }
 }
