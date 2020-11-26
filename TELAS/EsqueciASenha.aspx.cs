@@ -1,8 +1,4 @@
-﻿using Amazon;
-using Amazon.Runtime;
-using Amazon.SimpleEmail;
-using Amazon.SimpleEmail.Model;
-using Nito.AsyncEx;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Data;
