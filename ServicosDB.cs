@@ -1,0 +1,83 @@
+﻿using System;
+using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace TCCADS
+{
+    public class ServicosDB : IDisposable
+    {
+        public const string SERVIDOR = @""; 
+        public const string BANCO = "";
+        public const string USUARIO = "";
+        public const string SENHA = "";
+
+        public static String stringToSHA256(string value)
+        {
+            StringBuilder Sb = new StringBuilder();
+
+            using (var hash = SHA256.Create())
+            {
+                Encoding enc = Encoding.UTF8;
+                Byte[] result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (Byte b in result)
+                    Sb.Append(b.ToString("x2"));
+            }
+
+            return Sb.ToString();
+        }
+
+        public SqlConnection Conexao { get; private set; }
+
+        public ServicosDB()
+        {
+            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder()
+            {
+                DataSource = SERVIDOR,
+                InitialCatalog = BANCO,
+                UserID = USUARIO,
+                Password = SENHA
+            };
+
+            Conexao = new SqlConnection(sb.ToString());
+            Conexao.Open();
+        }
+
+        public SqlCommand CriarCommand(string Sql, params SqlParameter[] ParametroBD)
+        {
+            SqlCommand cmd = new SqlCommand(Sql, Conexao);
+
+            if ((ParametroBD != null) && (ParametroBD.Length > 0))
+            {
+                foreach (var p in ParametroBD)
+                {
+                    cmd.Parameters.Add(p);
+                }
+            }
+            return cmd;
+        }
+
+        public SqlDataReader ExecQuery(string Sql, params SqlParameter[] ParametroBD)
+        {
+            return CriarCommand(Sql, ParametroBD).ExecuteReader();
+        }
+
+        public int ExecUpdate(string Sql, params SqlParameter[] ParametroBD)
+        {
+            return CriarCommand(Sql, ParametroBD).ExecuteNonQuery();
+        }
+
+        public object QueryValue(string Sql, params SqlParameter[] ParametroBD)
+        {
+            return CriarCommand(Sql, ParametroBD).ExecuteScalar();
+        }
+
+        public void Dispose()
+        {
+            Conexao.Close();
+            Conexao.Dispose();
+        }
+
+    }
+}
