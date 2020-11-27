@@ -103,7 +103,7 @@ namespace TCCADS.TELAS
                             { }
                             else
                             {
-                                alert("Falha ao adicionar Palestrante!");
+                                alert("Falha ao inscrever-se na palestra!");
                             }
                             atualizarGrid();
                         }
@@ -113,13 +113,12 @@ namespace TCCADS.TELAS
                 }
                 catch (Exception ignored)
                 {
-                    alert("Inscrição malsucedida!");
                     inscricaoEfetuada = false;
                 }
 
-                try
+                if (inscricaoEfetuada)
                 {
-                    if (inscricaoEfetuada)
+                    try
                     {
                         using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
                         {
@@ -131,14 +130,20 @@ namespace TCCADS.TELAS
                             { }
                             else
                             {
-                                alert("Falha ao adicionar Palestrante!");
+                                alert("Falha ao falha ao atualizar contagem de inscritos!");
                             }
                             atualizarGrid();
                         }
                     }
+                    catch (Exception ignored)
+                    { }
                 }
-                catch (Exception ignored)
-                { }
+                else
+                {
+                    alert("Inscrição malsucedida!");
+                }
+
+
             }
         }
     }
