@@ -33,7 +33,17 @@ namespace TCCADS.TELAS
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["RGM_Usuario"] != null)
+            {
+                if (Convert.ToBoolean(Session["Coordenador"]))
+                {
+                    Response.Redirect("HomeCoordenador.aspx");
+                }
+                else
+                {
+                    Response.Redirect("HomeParticipante.aspx");
+                }
+            }
         }
 
         protected void btnEntrar_Click(object sender, EventArgs e)

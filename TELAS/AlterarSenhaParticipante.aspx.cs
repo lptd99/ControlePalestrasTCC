@@ -21,39 +21,78 @@ namespace TCCADS.TELAS
             Boolean senhaAtualCorreta = false;
 
             // Senha validation
-            try
+            if (Convert.ToBoolean(Session["AlterarSenhaCoordenador"]))
             {
-                using (ServicosDB db = new ServicosDB()) // READ DATABASE
+                try
                 {
-                    string cmd = "select senha from participante where rgm = @RGM_Usuario";
-                    SqlDataReader dr = db.ExecQuery(
-                        cmd,
-                        new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = txtRGM.Text }
-                        );
-
-                    if (dr.Read())
+                    using (ServicosDB db = new ServicosDB()) // READ DATABASE
                     {
-                        if (Convert.ToString(dr["senha"]) == ServicosDB.stringToSHA256(txtSenhaAtual.Text))
+                        string cmd = "select senha from coordenador where rgm = @RGM_Usuario";
+                        SqlDataReader dr = db.ExecQuery(
+                            cmd,
+                            new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 20) { Value = txtRGM.Text }
+                            );
+
+                        if (dr.Read())
                         {
-                            senhaAtualCorreta = true;
+                            if (Convert.ToString(dr["senha"]) == ServicosDB.stringToSHA256(txtSenhaAtual.Text))
+                            {
+                                senhaAtualCorreta = true;
+                            }
+                            else
+                            {
+                                senhaAtualCorreta = false;
+                            }
                         }
-                        else
-                        {
-                            senhaAtualCorreta = false;
-                        }
+                        dr.Close();
                     }
-                    dr.Close();
+                }
+                catch
+                {
+                    alert("Falha ao confirmar Senha Atual!");
                 }
             }
-            catch
+            else
             {
-                alert("Falha ao confirmar Senha Atual!");
+                try
+                {
+                    using (ServicosDB db = new ServicosDB()) // READ DATABASE
+                    {
+                        string cmd = "select senha from participante where rgm = @RGM_Usuario";
+                        SqlDataReader dr = db.ExecQuery(
+                            cmd,
+                            new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = txtRGM.Text }
+                            );
+
+                        if (dr.Read())
+                        {
+                            if (Convert.ToString(dr["senha"]) == ServicosDB.stringToSHA256(txtSenhaAtual.Text))
+                            {
+                                senhaAtualCorreta = true;
+                            }
+                            else
+                            {
+                                senhaAtualCorreta = false;
+                            }
+                        }
+                        dr.Close();
+                    }
+                }
+                catch
+                {
+                    alert("Falha ao confirmar Senha Atual!");
+                }
             }
 
-            if (txtNovaSenha.Text != txtConfirmarNovaSenha.Text || txtNovaSenha.Text.Length > 30 || txtNovaSenha.Text == "")
+            if (!senhaAtualCorreta)
+            {
+                alert("Senha Atual incorreta!");
+            }
+
+            if (txtNovaSenha.Text != txtConfirmarNovaSenha.Text || txtNovaSenha.Text.Length > 30 || txtNovaSenha.Text == "" || txtNovaSenha.Text == txtSenhaAtual.Text)
             {
                 novaSenhaValida = false;
-                alert("Nova Senha inválida! Ambos os campos de Nova Senha devem ser iguais e ter um máximo de 30 caracteres.");
+                alert("Nova Senha inválida! Ambos os campos de Nova Senha devem ser iguais e ter um máximo de 30 caracteres, além de não poderem ser iguais à senha atual nem vazios.");
             }
 
             return novaSenhaValida && senhaAtualCorreta;
@@ -77,6 +116,7 @@ namespace TCCADS.TELAS
 
         protected void btnVoltar_Click(object sender, EventArgs e)
         {
+            Session["AlterarSenhaCoordenador"] = false;
             Response.Redirect("HomeParticipante.aspx");
         }
 
@@ -84,25 +124,51 @@ namespace TCCADS.TELAS
         {
             if (alterarSenhaValidation())
             {
-                try
+                if (Convert.ToBoolean(Session["AlterarSenhaCoordenador"]))
                 {
-                    using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                    try
                     {
-                        string cmd = "UPDATE participante SET senha = @novaSenha where rgm = @rgm";
-                        if (db.ExecUpdate(
-                            cmd,
-                            new SqlParameter("@novaSenha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(txtNovaSenha.Text) },
-                            new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = txtRGM.Text }
-                            ) > 0)
+                        using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
                         {
-                            alert("Senha alterada com sucesso!");
-                            Response.Redirect("HomeParticipante.aspx");
-                        } else { alert("Falha ao efetuar alteração!"); }
+                            string cmd = "UPDATE coordenador SET senha = @novaSenha where rgm = @rgm";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@novaSenha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(txtNovaSenha.Text) },
+                                new SqlParameter("@rgm", SqlDbType.VarChar, 20) { Value = txtRGM.Text }
+                                ) > 0)
+                            {
+                                alert("Senha alterada com sucesso!");
+                            }
+                            else { alert("Falha ao efetuar alteração!"); }
+                        }
+                    }
+                    catch
+                    {
+                        alert("Falha ao efetuar alteração!");
                     }
                 }
-                catch
+                else
                 {
-                    alert("Falha ao efetuar alteração!");
+                    try
+                    {
+                        using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                        {
+                            string cmd = "UPDATE participante SET senha = @novaSenha where rgm = @rgm";
+                            if (db.ExecUpdate(
+                                cmd,
+                                new SqlParameter("@novaSenha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(txtNovaSenha.Text) },
+                                new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = txtRGM.Text }
+                                ) > 0)
+                            {
+                                alert("Senha alterada com sucesso!");
+                            }
+                            else { alert("Falha ao efetuar alteração!"); }
+                        }
+                    }
+                    catch
+                    {
+                        alert("Falha ao efetuar alteração!");
+                    }
                 }
             }
         }

@@ -32,34 +32,69 @@ namespace TCCADS.TELAS
                 string nova_senha = "";
                 string rgm = "";
                 string email = "";
-                using (ServicosDB db = new ServicosDB()) // READ DATABASE
-                {
-                    string cmd = "select rgm, email from participante where rgm = @RGM_Usuario";
-                    SqlDataReader dr = db.ExecQuery(
-                        cmd,
-                        new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = txtRGM.Text }
-                        );
 
-                    if (dr.Read())
+
+                if (Convert.ToBoolean(Session["EsqueciASenhaCoordenador"]))
+                {
+                    using (ServicosDB db = new ServicosDB()) // READ DATABASE
                     {
-                        try
+                        string cmd = "select rgm, email from coordenador where rgm = @RGM_Usuario";
+                        SqlDataReader dr = db.ExecQuery(
+                            cmd,
+                            new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 20) { Value = txtRGM.Text }
+                            );
+
+                        if (dr.Read())
                         {
-                            rgm = Convert.ToString(dr["rgm"]);
-                            email = Convert.ToString(dr["email"]);
+                            try
+                            {
+                                rgm = Convert.ToString(dr["rgm"]);
+                                email = Convert.ToString(dr["email"]);
+                            }
+                            catch
+                            {
+                                alert("RGM não cadastrado!");
+                            }
                         }
-                        catch
+                        else
                         {
                             alert("RGM não cadastrado!");
                         }
+                        dr.Close();
                     }
-                    else
-                    {
-                        alert("RGM não cadastrado!");
-                    }
-                    dr.Close();
                 }
+                else
+                {
+                    using (ServicosDB db = new ServicosDB()) // READ DATABASE
+                    {
+                        string cmd = "select rgm, email from participante where rgm = @RGM_Usuario";
+                        SqlDataReader dr = db.ExecQuery(
+                            cmd,
+                            new SqlParameter("@RGM_Usuario", SqlDbType.VarChar, 11) { Value = txtRGM.Text }
+                            );
 
-                if (rgm != "" && rgm.Length == 11 && email != "")
+                        if (dr.Read())
+                        {
+                            try
+                            {
+                                rgm = Convert.ToString(dr["rgm"]);
+                                email = Convert.ToString(dr["email"]);
+                            }
+                            catch
+                            {
+                                alert("RGM não cadastrado!");
+                            }
+                        }
+                        else
+                        {
+                            alert("RGM não cadastrado!");
+                        }
+                        dr.Close();
+                    }
+                }
+                
+
+                if (rgm != "" && (rgm.Length == 11 || rgm.Length > 20) && email != "")
                 {
                     string emailAlertSplit = email.Split('@')[0];
                     string emailAlert = "";
@@ -90,25 +125,44 @@ namespace TCCADS.TELAS
 
                     try
                     {
-                        using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                        if (Convert.ToBoolean(Session["EsqueciASenhaCoordenador"]))
                         {
-                            string cmd = "UPDATE participante SET senha = @senha where rgm = @rgm";
-                            if (db.ExecUpdate(
-                                cmd,
-                                new SqlParameter("@senha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(nova_senha) },
-                                new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = rgm }
-                                ) > 0)
-                            { }
-                            else
+                            using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
                             {
-                                alert("Falha ao adicionar Palestrante!");
+                                string cmd = "UPDATE coordenador SET senha = @senha where rgm = @rgm";
+                                if (db.ExecUpdate(
+                                    cmd,
+                                    new SqlParameter("@senha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(nova_senha) },
+                                    new SqlParameter("@rgm", SqlDbType.VarChar, 20) { Value = rgm }
+                                    ) > 0)
+                                { }
+                                else
+                                {
+                                    alert("Falha ao adicionar Palestrante!");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            using (ServicosDB db = new ServicosDB()) // UPDATE DATABASE
+                            {
+                                string cmd = "UPDATE participante SET senha = @senha where rgm = @rgm";
+                                if (db.ExecUpdate(
+                                    cmd,
+                                    new SqlParameter("@senha", SqlDbType.VarChar, 256) { Value = ServicosDB.stringToSHA256(nova_senha) },
+                                    new SqlParameter("@rgm", SqlDbType.VarChar, 11) { Value = rgm }
+                                    ) > 0)
+                                { }
+                                else
+                                {
+                                    alert("Falha ao adicionar Palestrante!");
+                                }
                             }
                         }
 
                         if (enviarEmailNovaSenha(email, rgm, nova_senha))
                         {
                             alert("Requisição efetuada! Dentro de alguns minutos, você deverá receber no email \"" + emailAlert + "\" a sua nova senha para o RGM \"" + rgm + "\"");
-
                         }
                     }
                     catch
@@ -169,7 +223,6 @@ namespace TCCADS.TELAS
                 // Credencial para envio por SMTP Seguro (Quando o servidor exige autenticação)
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.Credentials = new NetworkCredential("umccontrolepalestras@gmail.com", "ControlePalestrasUMC888");
-
                 smtpClient.EnableSsl = true;
             }
             catch
@@ -187,6 +240,7 @@ namespace TCCADS.TELAS
 
         protected void btnVoltar_Click(object sender, EventArgs e)
         {
+            Session["EsqueciASenhaCoordenador"] = false;
             Response.Redirect("Home.aspx");
         }
     }

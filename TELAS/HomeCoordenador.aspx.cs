@@ -17,6 +17,7 @@ namespace TCCADS.TELAS
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            Session["AlterarSenhaCoordenador"] = false;
             if (Session["RGM_Usuario"] == null || !Convert.ToBoolean(Session["Coordenador"]))
             {
                 Response.Redirect("Home.aspx");
@@ -47,6 +48,11 @@ namespace TCCADS.TELAS
         protected void btnCadastrarCoordenador_Click(object sender, EventArgs e)
         {
             Response.Redirect("CadastrarCoordenador.aspx");
+        }
+        protected void btnAlterarSenha_Click(object sender, EventArgs e)
+        {
+            Session["AlterarSenhaCoordenador"] = true;
+            Response.Redirect("AlterarSenhaParticipante.aspx");
         }
     }
 }
