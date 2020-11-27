@@ -294,7 +294,8 @@ namespace TCCADS.TELAS
             {
                 successful = false;
             }
-            if (successful)
+
+            if (!successful)
             {
                 alert("Falha ao Excluir Espaço. Talvez este espaço esteja ocupado por alguma palestra?");
             }
