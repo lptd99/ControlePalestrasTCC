@@ -8,12 +8,17 @@ body {
     font-weight: lighter;
 }
 
+.aspNetHidden {
+    display: none;
+}
+
 h1, h2 {
     font-weight: lighter;
     color: #004282;
 }
 
 .main, main {
+    position: relative;
     margin: auto;
     padding: 15px;
     width: 1000px;
@@ -37,6 +42,13 @@ h1, h2 {
         color: whitesmoke;
         text-decoration: none;
     }
+    
+#btnVoltar {
+    position: absolute;
+    float: right;
+    right: 50px;
+    bottom: 10%;
+}
 
 div {
     margin-bottom: 10px;
@@ -52,23 +64,26 @@ div {
     padding: 0;
     overflow: auto;
     background-color: #004282;
+    z-index: 3;
 }
 
 .nav li {
     float: left;
+    display: block;
 }
 
-.nav li a {
+.nav li [id*="btn"] {
     display: block;
     color: whitesmoke;
+    width: 100%;
     text-align: center;
     padding: 7px 10px;
     text-decoration: none;
 }
 
-.nav li a:hover {
-    background-color: #003264;
-}
+    .nav li [id*="btn"]:hover {
+        background-color: #003264;
+    }
 
 #frmCadastro, #frmConsulta, #frmLista {
     display: none;

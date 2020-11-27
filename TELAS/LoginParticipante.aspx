@@ -21,11 +21,12 @@
         <asp:TextBox ID="txtRGM" runat="server" Placeholder="RGM"></asp:TextBox>
         <asp:TextBox ID="txtSenha" runat="server" TextMode="Password" Placeholder="Senha"></asp:TextBox>      
     </div>
-            
-    <asp:Button ID="btnEntrar" runat="server" Text="Entrar" OnClick="btnEntrar_Click" />
+    <div>
+        <asp:Button ID="btnEntrar" runat="server" Text="Entrar" OnClick="btnEntrar_Click" />
+        <asp:Button ID="btnCadastrar" runat="server" Text="Cadastre-se" OnClick="btnCadastrar_Click" />
+    </div>
     <asp:Button ID="btnEsqueciMinhaSenha"  runat="server" Text="Esqueci minha senha" OnClick="btnEsqueciMinhaSenha_Click" />
     <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click" />
-    <asp:Button ID="btnCadastrar" runat="server" Text="Cadastrar" OnClick="btnCadastrar_Click" />
    
 </form>
 </body>

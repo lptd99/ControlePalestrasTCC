@@ -21,8 +21,10 @@
         <asp:TextBox ID="txtSenha" runat="server" TextMode="Password" Placeholder="Senha"></asp:TextBox>      
     </div>
             
-    <asp:Button ID="btnEntrar" runat="server" Text="Entrar" OnClick="btnEntrar_Click" />
-    <asp:Button ID="btnEsqueciMinhaSenha"  runat="server" Text="Esqueci minha senha" OnClick="btnEsqueciMinhaSenha_Click" />
+    <div>
+        <asp:Button ID="btnEntrar" runat="server" Text="Entrar" OnClick="btnEntrar_Click" />
+        <asp:Button ID="btnEsqueciMinhaSenha"  runat="server" Text="Esqueci minha senha" OnClick="btnEsqueciMinhaSenha_Click" />
+    </div>
     <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click" />
 </form>
 </body>
