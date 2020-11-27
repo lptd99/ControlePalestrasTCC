@@ -260,7 +260,9 @@ namespace TCCADS.TELAS
 
         protected void btnExcluir_Click(object sender, EventArgs e)
         {
-            //try {
+            Boolean successful = false;
+            try
+            {
                 if (Convert.ToInt32(txtID.Text) < getNextID())
                 {
                     using (ServicosDB db = new ServicosDB()) // DELETE DATABASE
@@ -272,6 +274,7 @@ namespace TCCADS.TELAS
                             ) > 0)
                         {
                             limparCampos();
+                            successful = true;
                         }
                         else
                         {
@@ -286,7 +289,16 @@ namespace TCCADS.TELAS
                 }
                 limparCampos();
                 atualizarGrid();
-            //} catch (Exception exception) { alert("Falha ao Excluir Espaço. Erro: " + exception.ToString() + ". Talvez este espaço esteja ocupado por alguma palestra?"); }
+            }
+            catch (Exception exception)
+            {
+                successful = false;
+            }
+            if (successful)
+            {
+                alert("Falha ao Excluir Espaço. Talvez este espaço esteja ocupado por alguma palestra?");
+            }
+            
         }
 
         protected void btnVoltar_Click(object sender, EventArgs e)

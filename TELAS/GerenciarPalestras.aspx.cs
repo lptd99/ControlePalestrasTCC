@@ -219,6 +219,18 @@ namespace TCCADS.TELAS
             }
             #endregion
 
+            if (ddlEspaco.Items.Count == 0)
+            {
+                alert("Você deve ter um Espaco cadastrado e selecionado para criar uma Palestra!");
+                valid = false;
+            }
+
+            if (ddlPalestrante.Items.Count == 0)
+            {
+                alert("Você deve ter um Palestrante cadastrado e selecionado para criar uma Palestra!");
+                valid = false;
+            }
+
             return valid;
         }
         public int getNextID()
