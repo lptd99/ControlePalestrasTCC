@@ -5,11 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="../CSS/standard.css" />
+    <title>Enviar Presença</title>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
+        <main style="max-width: 600px">
             <table>
                 <tr>
                     <td>
@@ -39,9 +41,9 @@
                     </td>
                 </tr>
             </table>
-        </div>
-        <asp:Button ID="btnEnviar" runat="server" Text="Enviar" OnClick="btnEnviar_Click" Width="75px" />
+        <asp:Button ID="btnEnviar" runat="server" Text="Enviar" OnClick="btnEnviar_Click" />
         <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click" />
+        </main>
     </form>
 </body>
 </html>

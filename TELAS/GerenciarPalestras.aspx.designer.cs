@@ -7,12 +7,10 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace TCCADS.TELAS
-{
+namespace TCCADS.TELAS {
 
 
-    public partial class GerenciarPalestras
-    {
+    public partial class GerenciarPalestras {
 
         /// <summary>
         /// Controle form1.
@@ -42,15 +40,6 @@ namespace TCCADS.TELAS
         protected global::System.Web.UI.WebControls.DropDownList ddlPalestrante;
 
         /// <summary>
-        /// Controle sqlDSPalestrante.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource sqlDSPalestrante;
-
-        /// <summary>
         /// Controle ddlCoordenador.
         /// </summary>
         /// <remarks>
@@ -58,15 +47,6 @@ namespace TCCADS.TELAS
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCoordenador;
-
-        /// <summary>
-        /// Controle sqlDSCoordenador.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource sqlDSCoordenador;
 
         /// <summary>
         /// Controle txtNome.
@@ -112,15 +92,6 @@ namespace TCCADS.TELAS
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEspaco;
-
-        /// <summary>
-        /// Controle sqlDSEspaco.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource sqlDSEspaco;
 
         /// <summary>
         /// Controle txtNota.
@@ -184,15 +155,6 @@ namespace TCCADS.TELAS
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvPalestras;
-
-        /// <summary>
-        /// Controle gvPalestrasDataSource.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource gvPalestrasDataSource;
 
         /// <summary>
         /// Controle btnVoltar.

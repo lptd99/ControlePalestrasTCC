@@ -14,7 +14,7 @@
     <form id="form1" runat="server">
         <main>
             <h1>Projeto Web Palestras</h1>
-            <h2>Versão beta 0.7</h2>
+            <h2>Versão alpha 1.0</h2>
             <table>
                 <tr>
                     <td>
