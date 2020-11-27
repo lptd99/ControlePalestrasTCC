@@ -116,8 +116,15 @@ namespace TCCADS.TELAS
 
         protected void btnVoltar_Click(object sender, EventArgs e)
         {
-            Session["AlterarSenhaCoordenador"] = false;
-            Response.Redirect("HomeParticipante.aspx");
+            if (Convert.ToBoolean(Session["AlterarSenhaCoordenador"]))
+            {
+                Session["AlterarSenhaCoordenador"] = false;
+                Response.Redirect("HomeCoordenador.aspx");
+            }
+            else
+            {
+                Response.Redirect("HomeParticipante.aspx");
+            }
         }
 
         protected void btnAlterar_Click(object sender, EventArgs e)
