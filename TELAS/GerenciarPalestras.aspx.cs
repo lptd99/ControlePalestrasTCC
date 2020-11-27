@@ -288,6 +288,25 @@ namespace TCCADS.TELAS
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if(!IsPostBack)
+            {
+                atualizarDDLs();
+            }
+
+            if (Session["RGM_Usuario"] == null || !Convert.ToBoolean(Session["Coordenador"]))
+            {
+                Response.Redirect("Home.aspx");
+            }
+
+            if (!IsPostBack)
+            {
+                limparCampos();
+                atualizarGrid();
+            }
+        }
+
+        private void atualizarDDLs()
+        {
             using (ServicosDB db = new ServicosDB())
             {
                 ddlCoordenador.DataSource = db.ExecQuery($"SELECT [rgm], [nome] FROM [Coordenador]");
@@ -300,21 +319,10 @@ namespace TCCADS.TELAS
                 ddlPalestrante.DataBind();
             }
 
-                using (ServicosDB db = new ServicosDB())
+            using (ServicosDB db = new ServicosDB())
             {
                 ddlEspaco.DataSource = db.ExecQuery($"SELECT [id], [nome], [capacidade] FROM [Espaco]");
                 ddlEspaco.DataBind();
-            }
-
-            if (Session["RGM_Usuario"] == null || !Convert.ToBoolean(Session["Coordenador"]))
-            {
-                Response.Redirect("Home.aspx");
-            }
-
-            if (!IsPostBack)
-            {
-                limparCampos();
-                atualizarGrid();
             }
         }
 
@@ -339,6 +347,7 @@ namespace TCCADS.TELAS
                         int id = Convert.ToInt32(db.QueryValue("select @@identity"));
                         txtID.Text = $"{id}";
                         limparCampos();
+                        atualizarDDLs();
                     }
                     else
                     {
@@ -372,7 +381,8 @@ namespace TCCADS.TELAS
                                 ) > 0)
                             {
                                 limparCampos();
-                            }
+                                atualizarDDLs();
+                        }
                             else
                             {
                                 alert("Falha ao alterar Palestra!");
@@ -407,6 +417,7 @@ namespace TCCADS.TELAS
                             ) > 0)
                         {
                             limparCampos();
+                            atualizarDDLs();
                         }
                         else
                         {
@@ -460,6 +471,7 @@ namespace TCCADS.TELAS
                             ddlEspaco.SelectedValue = $"{dr["idEspaco"]}";
                             txtNota.Text = $"{dr["nota"]}";
                             txtInscritos.Text = $"{dr["inscritos"]}";
+                            atualizarDDLs();
                         }
                         dr.Close();
                     }
