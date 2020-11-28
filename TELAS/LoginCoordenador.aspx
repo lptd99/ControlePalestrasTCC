@@ -17,7 +17,7 @@
     <h2>Portal do coordenador</h2>
 
     <div>
-        <asp:TextBox ID="txtRGM" runat="server" Placeholder="RGM"></asp:TextBox>
+        <asp:TextBox ID="txtRGM" runat="server" Placeholder="Matrícula"></asp:TextBox>
         <asp:TextBox ID="txtSenha" runat="server" TextMode="Password" Placeholder="Senha"></asp:TextBox>      
     </div>
             

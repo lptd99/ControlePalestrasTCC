@@ -22,7 +22,7 @@
             <table>
                 <tr>
                     <td>
-                        <asp:TextBox ID="txtRGM" runat="server" Placeholder="RGM"></asp:TextBox>
+                        <asp:TextBox ID="txtRGM" runat="server" Placeholder="Matrícula"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>

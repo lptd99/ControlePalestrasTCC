@@ -16,7 +16,6 @@
             <li><a href="GerenciarEspacos.aspx">Gerenciar Espacos</a></li>
             <li><a href="GerenciarPalestrantes.aspx">Gerenciar Palestrantes</a></li>
             <li><a href="CadastrarCoordenador.aspx">Cadastrar Coordenador</a></li>
-            <li><a href="AlterarSenhaParticipante.aspx">Alterar Senha</a></li>
         </ul>
         <main>
             <h2>Controle de Palestras</h2>

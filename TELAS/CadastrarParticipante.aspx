@@ -7,6 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Cadastrar Participante</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="../CSS/standard.css" />
     <meta charset="UTF-8"/>
     <style>
         .auto-style1 {
@@ -16,85 +17,61 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
-            CADASTRAR PARTICIPANTE
+        <main style="width: 600px">
+            <h2>Cadastro de participante</h2>
             <table>
                 <tr class="auto-style1">
                     <td>
-                        RGM
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtRGM" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtRGM" runat="server" Placeholder="RGM"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        E-mail
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"></asp:TextBox>
+                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"  Placeholder="E-mail"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Senha
-                    </td>
-                    <td>
-                        <asp:TextBox ID="pwdSenha" runat="server" TextMode="Password"></asp:TextBox>
+                        <asp:TextBox ID="pwdSenha" runat="server" TextMode="Password" Placeholder="Senha"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Confirme sua senha
-                    </td>
-                    <td>
-                        <asp:TextBox ID="pwdConfirma" runat="server" TextMode="Password"></asp:TextBox>
+                        <asp:TextBox ID="pwdConfirma" runat="server" TextMode="Password" Placeholder="Confirme sua senha"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Nome
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtNome" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtNome" runat="server" Placeholder="Nome"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        Data de nascimento
-                    </td>
                     <td>
                         <asp:TextBox ID="txtDataNasc" runat="server" TextMode="Date"></asp:TextBox>
                     </td>
-                </tr>
-                <tr>
                     <td>
-                        RG
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtRG" runat="server"></asp:TextBox>
+                        Data de nascimento
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        CPF
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtCPF" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtRG" runat="server" Placeholder="RG"></asp:TextBox>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        Curso
+                        <asp:TextBox ID="txtCPF" runat="server" Placeholder="CPF"></asp:TextBox>
                     </td>
+                </tr>
+                <tr>
                     <td>
-                        <asp:TextBox ID="txtCurso" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtCurso" runat="server" Placeholder="Curso"></asp:TextBox>
                     </td>
                 </tr>
             </table>
             <asp:Button ID="btnCadastrarPart" runat="server" Text="Cadastrar" OnClick="btnCadastrarPart_Click" />
             <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click" />
-        </div>
+        </main>
     </form>
 </body>
 </html>

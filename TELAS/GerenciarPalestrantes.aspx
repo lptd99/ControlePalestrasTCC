@@ -21,7 +21,6 @@
             <li><a href="GerenciarEspacos.aspx">Gerenciar Espacos</a></li>
             <li><a class="active" href="#">Gerenciar Palestrantes</a></li>
             <li><a href="CadastrarCoordenador.aspx">Cadastrar Coordenador</a></li>
-            <li><a href="AlterarSenha.aspx">Alterar Senha</a></li>
         </ul>
         <main>
             
