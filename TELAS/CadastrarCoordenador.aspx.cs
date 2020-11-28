@@ -39,10 +39,10 @@ namespace TCCADS.TELAS
                 valid = false;
                 alert("O campo RGM deve conter apenas números!");
             }
-            if (txtRGM.Text == "" || txtRGM.Text.Length != 11)
+            if (txtRGM.Text == "" || txtRGM.Text.Length != 6)
             {
                 valid = false;
-                alert("RGM inválido! Deve ter 11 caracteres.");
+                alert("RGM inválido! Deve ter 6 caracteres.");
             }
 
             // Senha validation

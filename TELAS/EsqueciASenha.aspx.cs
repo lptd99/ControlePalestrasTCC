@@ -26,7 +26,17 @@ namespace TCCADS.TELAS
 
         protected void btnEnviar_Click(object sender, EventArgs e)
         {
-            if (txtRGM.Text != "" && txtRGM.Text.Length == 11)
+            int rgmLength = 0;
+            if (Convert.ToBoolean(Session["EsqueciASenhaCoordenador"]))
+            {
+                rgmLength = 6;
+            }
+            else
+            {
+                rgmLength = 11;
+            }
+
+            if (txtRGM.Text != "" && txtRGM.Text.Length == rgmLength)
             {
                  //try {
                 string nova_senha = "";
@@ -94,7 +104,7 @@ namespace TCCADS.TELAS
                 }
                 
 
-                if (rgm != "" && (rgm.Length == 11 || rgm.Length > 20) && email != "")
+                if (rgm != "" && rgm.Length == rgmLength && email != "")
                 {
                     string emailAlertSplit = email.Split('@')[0];
                     string emailAlert = "";

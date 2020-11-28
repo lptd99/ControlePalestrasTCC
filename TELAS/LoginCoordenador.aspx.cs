@@ -20,7 +20,7 @@ namespace TCCADS.TELAS
         public Boolean validarCampos()
         {
             Boolean valid = true;
-            if (txtRGM.Text == "" || txtRGM.Text.Length != 11)
+            if (txtRGM.Text == "" || txtRGM.Text.Length != 6)
             {
                 valid = false;
                 alert("RGM inválido!");
