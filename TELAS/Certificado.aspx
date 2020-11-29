@@ -18,7 +18,7 @@
         </div>            
         <h1>C E R T I F I C A D O</h1>
 
-        <asp:Label ID="lblTexto" runat="server" Text="Certificamos que o aluno [NOME_USUARIO], do curso [CURSO_USUARIO], participou do evento [NOME_PALESTRA], ministrado pelo Prof. [NOME_PALESTRANTE] no dia [DATA_INICIO_PALESTRA], com carga horária total de [TIMESPAN_HORAS] hora(s) e [TIMEPSAN_MINUTOS] minuto(s)." Font-Names="Arial"></asp:Label>
+        <asp:Label ID="lblTexto" runat="server" Text="Certificamos que o aluno [NOME_USUARIO], do curso [CURSO_USUARIO], participou do evento [NOME_PALESTRA], ministrado pelo Prof. [NOME_PALESTRANTE] no dia [DATA_INICIO_PALESTRA], com carga horária total de [TIMESPAN_HORAS] hora(s) e [TIMESPAN_MINUTOS] minuto(s)." Font-Names="Arial"></asp:Label>
         <div>
             <p class="data">
             </p>

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Participante</title>
     <link rel="stylesheet" href="../CSS/standard.css" />
-    <link rel="stylesheet" href="../CSS/Login.css" />
+    <link rel="stylesheet" href="../CSS/Log-in.css" />
 </head>
 <body class="text-center" runat="server">
 <form id="form1" class="form-signin" runat="server">

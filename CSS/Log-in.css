@@ -2,7 +2,7 @@ body {
     background: url("http://teatroumc.com.br/wp-content/uploads/2012/03/teatro2.jpg") no-repeat;
     background-size: cover;
     height: 100%;
-    width: 100% /*calc(1920 - 50%)*/;
+    width: 100%;
     overflow-x: hidden;
 }
 
