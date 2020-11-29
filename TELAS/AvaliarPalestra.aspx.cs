@@ -11,6 +11,9 @@ namespace TCCADS.TELAS
 {
     public partial class AvaliarPalestra : System.Web.UI.Page
     {
+
+
+
         public void alert(string Msg)
         {
             Response.Write($"<script>alert('{Msg}');</script>");
@@ -28,6 +31,7 @@ namespace TCCADS.TELAS
                 Response.Redirect("Home.aspx");
             }
         }
+
 
         protected void btnAvaliar_Click(object sender, EventArgs e)
         {
@@ -54,6 +58,10 @@ namespace TCCADS.TELAS
             { }
         }
 
+        protected void btnVoltar_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("MinhasPalestras.aspx");
+        }
         private bool notaIsValid()
         {
 
