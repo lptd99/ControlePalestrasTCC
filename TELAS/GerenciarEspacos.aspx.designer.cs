@@ -7,12 +7,10 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace TCCADS.TELAS
-{
+namespace TCCADS.TELAS {
 
 
-    public partial class GerenciarEspacos
-    {
+    public partial class GerenciarEspacos {
 
         /// <summary>
         /// Controle form1.
@@ -94,15 +92,6 @@ namespace TCCADS.TELAS
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvEspacos;
-
-        /// <summary>
-        /// Controle gvEspacosDataSource.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource gvEspacosDataSource;
 
         /// <summary>
         /// Controle btnVoltar.

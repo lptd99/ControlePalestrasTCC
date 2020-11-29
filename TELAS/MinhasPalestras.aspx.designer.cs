@@ -7,12 +7,10 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace TCCADS.TELAS
-{
+namespace TCCADS.TELAS {
 
 
-    public partial class MinhasPalestras
-    {
+    public partial class MinhasPalestras {
 
         /// <summary>
         /// Controle form1.
@@ -31,15 +29,6 @@ namespace TCCADS.TELAS
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvMinhasPalestras;
-
-        /// <summary>
-        /// Controle gvMinhasPalestrasDataSource.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource gvMinhasPalestrasDataSource;
 
         /// <summary>
         /// Controle btnVoltar.

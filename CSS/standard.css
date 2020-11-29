@@ -31,6 +31,7 @@ h1, h2 {
 .button, button, [id*=btn] {
     border: none;
     min-width: 100px;
+    margin: 3px;
     padding: 7px;
     background-color: #004282;
     color: whitesmoke;
@@ -63,6 +64,7 @@ div {
 
 .nav {
     position: fixed;
+    display: block;
     top: 0px;
     list-style-type: none;
     width: 100%;
@@ -81,7 +83,6 @@ div {
     .nav li > * {
         color: whitesmoke;
         width: 100%;
-        text-align: center;
         padding: 7px 10px;
         text-decoration: none;
         transition-duration: 0.2s;
@@ -100,9 +101,16 @@ div {
     height: 20rem;
 }
 
-.tbPalestras {
+.tb {
     border-collapse: collapse;
     width: 100%;
+    overflow-y: scroll;
+}
+
+.tbPalestras {
+    border-collapse: collapse;
+    width: 95%;
+    overflow-y: scroll;
 }
 
 .tbPalestras th {
@@ -127,6 +135,24 @@ div {
     background-color: #b8baff;
     cursor: pointer;
 }
+
+
+@media screen and (max-width: 600px) {
+
+    main {
+        margin-top: 200px;
+    }
+
+    .nav li {
+        float: none;
+    }
+
+        .nav li > * {
+            text-align: left;
+        }
+    
+}
+
 
 /*
     #8284ff;

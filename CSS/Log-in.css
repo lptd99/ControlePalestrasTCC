@@ -14,8 +14,8 @@ body {
     position: relative;
     text-align: center;
     background-color: white;
-    width: 100%;
-    max-width: 440px;
+    width: 440px;
+    max-width: 100%;
     min-height: 500px;
     margin: 5% 10%;
     padding: 40px;
@@ -29,5 +29,20 @@ body {
         margin: auto;
         margin-bottom: 10px;
         padding: 10px;
-        width: 70%;
+        width: 250px;
+        display: block;
     }
+
+@media screen and (max-width: 768px) {
+    
+    body {
+        background: white;
+    }
+    
+    .form-signin {
+        float: none;
+        margin: 0;
+        width: 100%;
+    }
+    
+}

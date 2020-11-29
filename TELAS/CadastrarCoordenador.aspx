@@ -17,7 +17,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <main style="max-width: 600px">
+        <main style="max-width: 300px">
             <h2>Cadastrar Coordenador</h2>
             <table>
                 <tr>

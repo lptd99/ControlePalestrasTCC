@@ -18,8 +18,7 @@
         </ul>
 
         <main>
-
-
+            <div class="tb">
             <asp:GridView ID="gvMinhasPalestras" CssClass="tbPalestras" runat="server" AutoGenerateColumns="False" DataKeyNames="id" OnRowCommand="gvMinhasPalestras_RowCommand">
                 <Columns >
                     <asp:BoundField DataField="ID" HeaderText="ID" SortExpression="ID" >
@@ -54,8 +53,7 @@
                     <asp:ButtonField ButtonType="Button" CommandName="imprimirCertificado" Text="Imprimir Certificado" />
                 </Columns>
             </asp:GridView>
-            <!-- <asp:SqlDataSource ID="gvMinhasPalestrasDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:TCCADSConnectionString %>" SelectCommand= "SELECT [P].[id] as 'ID', [P].[nome] as 'Nome', [P].[dataHorarioInicio] as 'Data e Horário de Início', [P].[dataHorarioTermino] as 'Data e Horário de Término', [E].[nome] as 'Sala', [P].[curso] as 'Curso', [PL].[nome] as 'Palestrante', CONCAT(CONCAT([P].[inscritos], '/'), [E].[capacidade]) as 'Inscritos' FROM [Palestra] as P INNER JOIN [Espaco] as E ON E.id = P.idEspaco INNER JOIN [Palestrante] as PL ON PL.id = P.idPalestrante INNER JOIN [Inscricao] as I on P.id = I.idPalestra"></asp:SqlDataSource>
-            -->
+            </div>
             <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click" />
         </main>
     </form>

@@ -12,7 +12,7 @@
 </head>
 <body>
 <form id="form1" runat="server">
-    <main onclick="print()">
+    <main>
         <div style="float: right">
             <asp:Image ID="imgLogoUMC" runat="server" ImageUrl="~/MISC/LogoUMC.png" />
         </div>            
@@ -24,7 +24,8 @@
             </p>
         </div>
     </main>
-    <asp:Button ID="btnVoltar" runat="server" Text="Button" OnClick="btnVoltar_Click"/>
+    <button onclick="print()">Imprimir</button>
+    <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click"/>
     <script>
         var mes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         var d = new Date();

@@ -93,7 +93,9 @@
             <asp:Button ID="btnAlterar" runat="server" Text="Alterar" OnClick="btnAlterar_Click" />
             <asp:Button ID="btnExcluir" runat="server" Text="Excluir" OnClick="btnExcluir_Click" />
             <asp:Button ID="btnLimpar" runat="server" Text="Limpar" OnClick="btnLimpar_Click" />
-            <asp:GridView ID="gvPalestras" CssClass="tbPalestras" runat="server" AutoGenerateColumns="False" DataKeyNames="id" OnRowCommand="gvPalestras_RowCommand">
+            
+            <div class="tb">
+                <asp:GridView ID="gvPalestras" CssClass="tbPalestras" runat="server" AutoGenerateColumns="False" DataKeyNames="id" OnRowCommand="gvPalestras_RowCommand">
                 <Columns >
                     <asp:BoundField DataField="ID" HeaderText="ID" SortExpression="ID" >
                     <HeaderStyle Width="200px" />
@@ -127,6 +129,8 @@
                     <asp:ButtonField ButtonType="Button" CommandName="enviar_presenca" Text="Enviar Presença" />
                 </Columns>
             </asp:GridView>
+            </div>
+            
             
             <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click"/>
         </main>

@@ -46,6 +46,7 @@
             <asp:Button ID="btnAlterar" runat="server" Text="Alterar" OnClick="btnAlterar_Click" />
             <asp:Button ID="btnExcluir" runat="server" Text="Excluir" OnClick="btnExcluir_Click" />
             <asp:Button ID="btnLimpar" runat="server" Text="Limpar" OnClick="btnLimpar_Click" />
+            <div class="tb">
             <asp:GridView ID="gvPalestrantes" CssClass="tbPalestras" runat="server" AutoGenerateColumns="False" DataKeyNames="id" OnRowCommand="gvPalestrantes_RowCommand">
                 <Columns>
                     <asp:BoundField DataField="id" HeaderText="ID" ReadOnly="True" SortExpression="id" />
@@ -56,8 +57,8 @@
                     <asp:ButtonField ButtonType="Button" CommandName="carregar" Text="Carregar" />
                 </Columns>
             </asp:GridView>
-            <!--<asp:SqlDataSource ID="gvPalestrantesDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:TCCADSConnectionString %>" SelectCommand="SELECT [id], [nome], [email], [telefone], [formacao] FROM [Palestrante]"></asp:SqlDataSource>
-            --><asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click"/>
+            </div>
+            <asp:Button ID="btnVoltar" runat="server" Text="Voltar" OnClick="btnVoltar_Click"/>
         </main>
     </form>
 </body>
