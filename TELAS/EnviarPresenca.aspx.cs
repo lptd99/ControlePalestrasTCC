@@ -91,9 +91,13 @@ namespace TCCADS.TELAS
             if (erro > 0)
             {
                 alert("As seguintes linhas não foram identificadas como RGMs válidos:" + presentesErro);
+                alert("Presença atribuída para todos os RGMs inseridos, exceto os presentes na lista de erros!");
+            }
+            else
+            {
+                alert("Presença atribuída para todos os RGMs inseridos!");
             }
 
-            alert("Os RGMs que não apareceram na lista de erros estavam válidos e a operação com eles foi efetuada com sucesso!\nCaso nenhuma mensagem de erro tenha aparecido, todos os RGMs estavam válidos!" + presentesErro);
 
         }
 
