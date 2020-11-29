@@ -73,7 +73,6 @@ namespace TCCADS.TELAS
                                     presentesErro = presentesErro + ",";
                                 }
                                 presentesErro = presentesErro + " \"" + presentesList[i] + "\"";
-                                alert("Falha ao salvar presença!");
                             }
                         }
                         sucesso ++;
@@ -89,7 +88,13 @@ namespace TCCADS.TELAS
                     presentesErro = presentesErro + " \"" + presentesList[i] + "\"";
                 }
             }
-            alert("As seguintes linhas não foram identificadas como RGMs válidos:" + presentesErro);
+            if (erro > 0)
+            {
+                alert("As seguintes linhas não foram identificadas como RGMs válidos:" + presentesErro);
+            }
+
+            alert("Os RGMs que não apareceram na lista de erros estavam válidos e a operação com eles foi efetuada com sucesso!\nCaso nenhuma mensagem de erro tenha aparecido, todos os RGMs estavam válidos!" + presentesErro);
+
         }
 
         protected void btnVoltar_Click(object sender, EventArgs e)

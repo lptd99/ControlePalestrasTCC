@@ -61,6 +61,47 @@ namespace TCCADS.TELAS
                 valid = false;
                 alert("O campo CPF não pode ser vazio e deve ter 11 caracteres.");
             }
+
+            // validating CPF's uniqueness
+            if (valid)
+            {
+                int primeiroDigito = txtCPF.Text[9] - 48;
+                Boolean primeiroDigitoOK = false;
+                int segundoDigito = txtCPF.Text[10] - 48;
+                Boolean segundoDigitoOK = false;
+                int[] digitosCPF = {
+                    txtCPF.Text[0]-48, txtCPF.Text[1]-48, txtCPF.Text[2]-48, txtCPF.Text[3]-48,
+                    txtCPF.Text[4]-48, txtCPF.Text[5]-48, txtCPF.Text[6]-48, txtCPF.Text[7]-48,
+                    txtCPF.Text[8]-48, txtCPF.Text[9]-48, txtCPF.Text[10]-48
+                };
+                int resultado = 0;
+                for (int i = 2; i < digitosCPF.Length; i++)
+                {
+                    resultado += digitosCPF[i - 2] * (12 - i);
+                }
+
+                if (resultado * 10 % 11 == 10) { primeiroDigitoOK = primeiroDigito == 0; }
+                else { primeiroDigitoOK = primeiroDigito == resultado * 10 % 11; }
+
+                if (primeiroDigitoOK)
+                {
+                    resultado = 0;
+                    for (int i = 1; i < digitosCPF.Length; i++)
+                    {
+                        resultado += digitosCPF[i - 1] * (12 - i);
+                    }
+                }
+
+                if (resultado * 10 % 11 == 10) { segundoDigitoOK = segundoDigito == 0; }
+                else { segundoDigitoOK = segundoDigito == resultado * 10 % 11; }
+
+                if (!primeiroDigitoOK || !segundoDigitoOK)
+                {
+                    valid = false;
+                    alert("CPF inválido!");
+                }
+            }
+
             // VALIDATE EMAIL
             if (
                 txtEmail.Text == "" || txtEmail.Text.Length > 100
