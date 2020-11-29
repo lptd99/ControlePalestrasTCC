@@ -211,7 +211,7 @@ namespace TCCADS.TELAS
                 int minutoI = Convert.ToInt32(splitTimeInicio[1]);
                 int segundoI = Convert.ToInt32(splitTimeInicio[2]);
 
-                DateTime dataInicio = new DateTime(anoI, mesI, diaI, horaI, minutoI, segundoI);
+                DateTime dataHorarioInicio = new DateTime(anoI, mesI, diaI, horaI, minutoI, segundoI);
 
                 // TIMESPAN STRING
                 String[] dataHorarioTerminoPair = data_termino_palestra.Split(' ');
@@ -226,13 +226,13 @@ namespace TCCADS.TELAS
 
                 DateTime dataHorarioTermino = new DateTime(anoT, mesT, diaT, horaT, minutoT, segundoT);
 
-                TimeSpan timeSpan = dataHorarioTermino.Subtract(dataInicio);
+                TimeSpan timeSpan = dataHorarioTermino.Subtract(dataHorarioInicio);
 
                 Session["CERTIFICADO_NOME_USUARIO"] = nome_usuario;
                 Session["CERTIFICADO_CURSO_USUARIO"] = curso_usuario;
                 Session["CERTIFICADO_NOME_PALESTRANTE"] = nome_palestrante;
                 Session["CERTIFICADO_NOME_PALESTRA"] = nome_palestra;
-                Session["CERTIFICADO_DATA_INICIO_PALESTRA"] = dataInicio.Date.ToString();
+                Session["CERTIFICADO_DATA_INICIO_PALESTRA"] = dataHorarioInicio.ToString();
                 Session["CERTIFICADO_TIMESPAN_HORAS"] = timeSpan.Hours;
                 Session["CERTIFICADO_TIMESPAN_MINUTOS"] = timeSpan.Minutes;
 
