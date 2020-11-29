@@ -7,12 +7,10 @@
 // </gerado automaticamente>
 //------------------------------------------------------------------------------
 
-namespace TCCADS.TELAS
-{
+namespace TCCADS.TELAS {
 
 
-    public partial class Certificado
-    {
+    public partial class Certificado {
 
         /// <summary>
         /// Controle form1.
@@ -33,15 +31,6 @@ namespace TCCADS.TELAS
         protected global::System.Web.UI.WebControls.Image imgLogoUMC;
 
         /// <summary>
-        /// Controle lblTitulo.
-        /// </summary>
-        /// <remarks>
-        /// Campo gerado automaticamente.
-        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTitulo;
-
-        /// <summary>
         /// Controle lblTexto.
         /// </summary>
         /// <remarks>
@@ -49,5 +38,14 @@ namespace TCCADS.TELAS
         /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTexto;
+
+        /// <summary>
+        /// Controle btnVoltar.
+        /// </summary>
+        /// <remarks>
+        /// Campo gerado automaticamente.
+        /// Modificar a declaração do campo de movimento do arquivo de designer para o arquivo code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnVoltar;
     }
 }

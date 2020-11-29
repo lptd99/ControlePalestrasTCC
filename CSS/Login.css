@@ -3,7 +3,7 @@ body {
     background-size: cover;
     height: 100%;
     width: 100% /*calc(1920 - 50%)*/;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .aspNetHidden {
@@ -16,7 +16,7 @@ body {
     background-color: white;
     width: 100%;
     max-width: 440px;
-    min-height: 550px;
+    min-height: 500px;
     margin: 5% 10%;
     padding: 40px;
     float: right;
